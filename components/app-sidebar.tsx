@@ -11,14 +11,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,11 +25,7 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import { Kbd } from "@/components/ui/kbd";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sidebar,
@@ -70,6 +63,8 @@ import {
   IconUser,
   IconUsers,
   IconLink,
+  IconBadge,
+  IconCreditCard,
 } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -78,12 +73,53 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SettingsDialog } from "@/components/settings-dialog";
 
+function PopoverItem({ className, onSelect, onClick, children, ...props }: any) {
+  return (
+    <div
+      role="menuitem"
+      onClick={(e) => {
+        if (onSelect) onSelect(e);
+        if (onClick) onClick(e);
+      }}
+      className={cn(
+        "group/popover-item relative flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+function PopoverSeparator({ className, ...props }: any) {
+  return <div className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />;
+}
+
+function PopoverLabel({ className, children, ...props }: any) {
+  return (
+    <div className={cn("px-1.5 py-1 text-xs font-medium text-muted-foreground", className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+function PopoverShortcut({ className, children, ...props }: any) {
+  return (
+    <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground group-hover/popover-item:text-accent-foreground", className)} {...props}>
+      {children}
+    </span>
+  );
+}
+
 export function AppSidebar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedIconId, setSelectedIconId] = useState("hexagon");
   const [currentHost, setCurrentHost] = useState("opsflow.com");
 
@@ -135,8 +171,8 @@ export function AppSidebar() {
       <SidebarHeader className="flex h-12 justify-center px-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Popover open={isWorkspaceOpen} onOpenChange={setIsWorkspaceOpen}>
+              <PopoverTrigger asChild>
                 <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10 cursor-pointer">
                   <Avatar className="h-6 w-6 rounded-md">
                     <AvatarFallback className="rounded-md bg-emerald-600 text-white text-[10px] font-semibold">
@@ -148,9 +184,9 @@ export function AppSidebar() {
                   </div>
                   <IconSelector className="ml-auto size-4 text-muted-foreground" />
                 </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-64 overflow-hidden p-0 rounded-lg"
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] min-w-56 p-0 block overflow-hidden rounded-lg"
                 align="start"
                 side="bottom"
                 sideOffset={8}
@@ -165,50 +201,53 @@ export function AppSidebar() {
                 </div>
                 <div className="p-1">
                   <ScrollArea className="h-[140px]">
-                    <DropdownMenuItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconHexagonFilled className="text-primary size-4" />
                       OpsFlow
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    </PopoverItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconUser className="text-muted-foreground size-4" />
                       Personal
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    </PopoverItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconBriefcase className="text-muted-foreground size-4" />
                       Project Alpha
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    </PopoverItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconFolder className="text-muted-foreground size-4" />
                       Project Beta
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    </PopoverItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconCode className="text-muted-foreground size-4" />
                       Engineering Team
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    </PopoverItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconPalette className="text-muted-foreground size-4" />
                       Design Studio
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    </PopoverItem>
+                    <PopoverItem onClick={() => setIsWorkspaceOpen(false)}>
                       <IconBook className="text-muted-foreground size-4" />
                       Documentation
-                    </DropdownMenuItem>
+                    </PopoverItem>
                   </ScrollArea>
                 </div>
-                <DropdownMenuSeparator className="m-0" />
+                <PopoverSeparator className="m-0" />
                 <div className="p-1">
-                  <DropdownMenuItem
-                    onSelect={() => setIsCreateWorkspaceOpen(true)}
+                  <PopoverItem
+                    onClick={() => {
+                      setIsCreateWorkspaceOpen(true);
+                      setIsWorkspaceOpen(false);
+                    }}
                   >
                     <IconPlus className="text-muted-foreground" />
                     Create workspace
-                    <DropdownMenuShortcut>
+                    <PopoverShortcut>
                       <Kbd>C</Kbd>
-                    </DropdownMenuShortcut>
-                  </DropdownMenuItem>
+                    </PopoverShortcut>
+                  </PopoverItem>
                 </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </PopoverContent>
+            </Popover>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -253,8 +292,8 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+            <Popover open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+              <PopoverTrigger asChild>
                 <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10 cursor-pointer">
                   <Avatar className="h-6 w-6 rounded-md">
                     <AvatarFallback className="rounded-md bg-emerald-600 text-white text-[10px] font-semibold">
@@ -265,50 +304,68 @@ export function AppSidebar() {
                     <span className="truncate font-medium">Shivraj</span>
                   </div>
                 </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] min-w-56 p-1.5 block rounded-lg"
                 side="top"
                 align="start"
                 sideOffset={8}
               >
-                <DropdownMenuGroup>
-                  <DropdownMenuItem onSelect={() => setIsSettingsOpen(true)}>
-                    <IconSettings className="text-muted-foreground" />
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onSelect={() => {
-                      navigator.clipboard.writeText(`https://${currentHost}/invite/x8j92k`);
-                      toast.success("Invite link copied to clipboard!");
+                <PopoverLabel className="p-0 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <Avatar className="h-8 w-8 rounded-lg">
+                      <AvatarFallback className="rounded-lg bg-emerald-600 text-white">SH</AvatarFallback>
+                    </Avatar>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-semibold">Shivraj</span>
+                      <span className="truncate text-xs">shivraj@example.com</span>
+                    </div>
+                  </div>
+                </PopoverLabel>
+                <PopoverSeparator />
+                <PopoverItem 
+                  onClick={() => {
+                    setIsSettingsOpen(true);
+                    setIsProfileOpen(false);
+                  }}
+                >
+                  <IconSettings className="text-muted-foreground" />
+                  Settings
+                </PopoverItem>
+                <PopoverItem 
+                  onClick={() => {
+                    navigator.clipboard.writeText(`https://${currentHost}/invite/x8j92k`);
+                    toast.success("Invite link copied to clipboard!");
+                    setIsProfileOpen(false);
+                  }}
+                >
+                  <IconLink className="text-muted-foreground" />
+                  Copy invite link
+                </PopoverItem>
+
+                {mounted && (
+                  <PopoverItem
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setTheme(theme === "dark" ? "light" : "dark");
                     }}
                   >
-                    <IconLink className="text-muted-foreground" />
-                    Copy invite link
-                  </DropdownMenuItem>
-
-                  {mounted && (
-                    <DropdownMenuItem
-                      onClick={() =>
-                        setTheme(theme === "dark" ? "light" : "dark")
-                      }
-                    >
-                      {theme === "dark" ? (
-                        <IconSun className="text-muted-foreground" />
-                      ) : (
-                        <IconMoon className="text-muted-foreground" />
-                      )}
-                      Toggle theme
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                    {theme === "dark" ? (
+                      <IconSun className="text-muted-foreground" />
+                    ) : (
+                      <IconMoon className="text-muted-foreground" />
+                    )}
+                    Toggle theme
+                  </PopoverItem>
+                )}
+                <PopoverSeparator />
+                <PopoverItem onClick={() => setIsProfileOpen(false)}>
                   <IconLogout className="text-muted-foreground" />
                   Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </PopoverItem>
+              </PopoverContent>
+            </Popover>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
