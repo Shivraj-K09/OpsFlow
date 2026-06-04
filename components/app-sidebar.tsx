@@ -73,7 +73,13 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { SettingsDialog } from "@/components/settings-dialog";
 
-function PopoverItem({ className, onSelect, onClick, children, ...props }: any) {
+function PopoverItem({
+  className,
+  onSelect,
+  onClick,
+  children,
+  ...props
+}: any) {
   return (
     <div
       role="menuitem"
@@ -83,7 +89,7 @@ function PopoverItem({ className, onSelect, onClick, children, ...props }: any) 
       }}
       className={cn(
         "group/popover-item relative flex w-full cursor-pointer items-center gap-2 rounded-lg px-2 py-1.5 text-sm outline-hidden select-none hover:bg-accent hover:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className
+        className,
       )}
       {...props}
     >
@@ -93,12 +99,20 @@ function PopoverItem({ className, onSelect, onClick, children, ...props }: any) 
 }
 
 function PopoverSeparator({ className, ...props }: any) {
-  return <div className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />;
+  return (
+    <div className={cn("-mx-1 my-1 h-px bg-border", className)} {...props} />
+  );
 }
 
 function PopoverLabel({ className, children, ...props }: any) {
   return (
-    <div className={cn("px-1.5 py-1 text-xs font-medium text-muted-foreground", className)} {...props}>
+    <div
+      className={cn(
+        "px-1.5 py-1 text-xs font-medium text-muted-foreground",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -106,7 +120,13 @@ function PopoverLabel({ className, children, ...props }: any) {
 
 function PopoverShortcut({ className, children, ...props }: any) {
   return (
-    <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground group-hover/popover-item:text-accent-foreground", className)} {...props}>
+    <span
+      className={cn(
+        "ml-auto text-xs tracking-widest text-muted-foreground group-hover/popover-item:text-accent-foreground",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </span>
   );
@@ -167,7 +187,7 @@ export function AppSidebar() {
     IconHexagonFilled;
 
   return (
-    <Sidebar variant="inset" className="border-none">
+    <Sidebar variant="sidebar">
       <SidebarHeader className="flex h-12 justify-center px-2">
         <SidebarMenu>
           <SidebarMenuItem>
@@ -255,7 +275,7 @@ export function AppSidebar() {
       <SidebarContent className="gap-2">
         {SIDEBAR_ROUTES.map((routeGroup) => {
           const visibleItems = routeGroup.items.filter((item) =>
-            item.allowedRoles.includes(CURRENT_USER_ROLE)
+            item.allowedRoles.includes(CURRENT_USER_ROLE),
           );
 
           if (visibleItems.length === 0) return null;
@@ -314,16 +334,20 @@ export function AppSidebar() {
                 <PopoverLabel className="p-0 font-normal">
                   <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                     <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarFallback className="rounded-lg bg-emerald-600 text-white">SH</AvatarFallback>
+                      <AvatarFallback className="rounded-lg bg-emerald-600 text-white">
+                        SH
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">Shivraj</span>
-                      <span className="truncate text-xs">shivraj@example.com</span>
+                      <span className="truncate text-xs">
+                        shivraj@example.com
+                      </span>
                     </div>
                   </div>
                 </PopoverLabel>
                 <PopoverSeparator />
-                <PopoverItem 
+                <PopoverItem
                   onClick={() => {
                     setIsSettingsOpen(true);
                     setIsProfileOpen(false);
@@ -332,9 +356,11 @@ export function AppSidebar() {
                   <IconSettings className="text-muted-foreground" />
                   Settings
                 </PopoverItem>
-                <PopoverItem 
+                <PopoverItem
                   onClick={() => {
-                    navigator.clipboard.writeText(`https://${currentHost}/invite/x8j92k`);
+                    navigator.clipboard.writeText(
+                      `https://${currentHost}/invite/x8j92k`,
+                    );
                     toast.success("Invite link copied to clipboard!");
                     setIsProfileOpen(false);
                   }}
@@ -385,7 +411,7 @@ export function AppSidebar() {
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="workspace-name">Workspace name</FieldLabel>
-                <InputGroup className="h-9 !bg-background">
+                <InputGroup className="h-9 bg-background!">
                   <InputGroupAddon>
                     <Popover>
                       <PopoverTrigger asChild>
