@@ -453,6 +453,10 @@ export async function createTask(formData: FormData, workspaceId: string) {
   const supabase = await createClient();
 
   const title = formData.get("title") as string;
+  if (!title || title.trim() === "") {
+    return { error: "Task title cannot be empty." };
+  }
+  
   const description = formData.get("description") as string;
   const priority = formData.get("priority") as string;
   const assignee_id = formData.get("assignee") as string;
@@ -654,6 +658,10 @@ export async function getTaskComments(taskId: string) {
 }
 
 export async function addTaskComment(taskId: string, text: string) {
+  if (!text || text.trim() === "") {
+    return { error: "Comment text cannot be empty." };
+  }
+
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { error: "Not authenticated" };
@@ -683,6 +691,10 @@ export async function updateTaskField(
   ];
   if (!allowedFields.includes(field)) {
     return { error: "Invalid task field provided." };
+  }
+
+  if (field === "title" && (!value || value.trim() === "")) {
+    return { error: "Task title cannot be empty." };
   }
 
   const supabase = await createClient();
