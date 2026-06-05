@@ -103,6 +103,7 @@ export function UsersClient({ workspaceId, role, currentUserId }: UsersClientPro
                     currentUserId={currentUserId}
                     currentUserRole={role || "USER"}
                     avatarColor={colorClass}
+                    workspaceId={workspaceId}
                   />
                 );
               })}

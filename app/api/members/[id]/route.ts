@@ -8,8 +8,11 @@ export async function PATCH(
 ) {
   const { id } = await params;
   try {
-    const { role } = await request.json();
-    const res = await updateMemberRole(id, role);
+    const { role, workspaceId } = await request.json();
+    if (!workspaceId) {
+      return NextResponse.json({ error: "workspaceId is required" }, { status: 400 });
+    }
+    const res = await updateMemberRole(id, role, workspaceId);
     if (res?.error) return NextResponse.json({ error: res.error }, { status: 400 });
     revalidatePath("/");
     return NextResponse.json({ success: true });

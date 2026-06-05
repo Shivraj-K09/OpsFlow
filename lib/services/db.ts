@@ -38,7 +38,7 @@ export async function getCurrentWorkspaceRole(targetWorkspaceId?: string) {
     .single();
 
   if (member) {
-    if (member.role === "owner" || member.role === "admin") return "ADMIN";
+    if (member.role === "admin") return "ADMIN";
     if (member.role === "manager") return "MANAGER";
     return "USER";
   }
@@ -89,9 +89,24 @@ export async function createWorkspace(formData: FormData) {
 }
 
 export async function setActiveWorkspace(workspaceId: string) {
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData?.user) return { error: "Unauthorized" };
+
+  // Verify user is a member of this workspace before setting it active
+  const { data: member } = await supabase
+    .from("workspace_members")
+    .select("user_id")
+    .eq("workspace_id", workspaceId)
+    .eq("user_id", userData.user.id)
+    .single();
+
+  if (!member) return { error: "You are not a member of this workspace." };
+
   const cookieStore = await cookies();
   cookieStore.set("active_workspace", workspaceId);
   revalidatePath("/dashboard", "layout");
+  return { success: true };
 }
 
 export async function updateWorkspace(formData: FormData, workspaceId: string) {
@@ -321,15 +336,13 @@ export async function getWorkspaceMembers(workspaceId: string) {
   return enrichedMembers;
 }
 
-export async function updateMemberRole(userId: string, newRole: string) {
+export async function updateMemberRole(userId: string, newRole: string, workspaceId: string) {
+  if (!workspaceId) return { error: "Workspace ID is required" };
+
   const supabase = await createClient();
   const adminClient = createAdminClient();
-  const cookieStore = await cookies();
-  const activeWorkspaceId = cookieStore.get("active_workspace")?.value;
 
-  if (!activeWorkspaceId) return { error: "No active workspace" };
-
-  const role = await getCurrentWorkspaceRole();
+  const role = await getCurrentWorkspaceRole(workspaceId);
   if (role !== "ADMIN") return { error: "Unauthorized" };
 
   const { data: userData } = await supabase.auth.getUser();
@@ -337,10 +350,16 @@ export async function updateMemberRole(userId: string, newRole: string) {
     return { error: "You cannot change your own role." };
   }
 
+  // Validate that the target newRole is a valid app_role
+  const validRoles = ["admin", "manager", "member"];
+  if (!validRoles.includes(newRole)) {
+    return { error: "Invalid role specified." };
+  }
+
   const { error } = await adminClient
     .from("workspace_members")
     .update({ role: newRole })
-    .eq("workspace_id", activeWorkspaceId)
+    .eq("workspace_id", workspaceId)
     .eq("user_id", userId);
 
   if (error) {

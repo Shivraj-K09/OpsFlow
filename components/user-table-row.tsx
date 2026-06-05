@@ -33,11 +33,13 @@ export function UserTableRow({
   currentUserId,
   currentUserRole,
   avatarColor,
+  workspaceId,
 }: {
   member: Member;
   currentUserId: string;
   currentUserRole: string;
   avatarColor: string;
+  workspaceId: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -59,7 +61,8 @@ export function UserTableRow({
     startTransition(async () => {
       const res = await fetch(`/api/members/${member.id}`, {
         method: "PATCH",
-        body: JSON.stringify({ role }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, workspaceId }),
       });
       const result = await res.json();
       if (!res.ok || result?.error) {

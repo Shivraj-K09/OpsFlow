@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { IconDownload, IconFilter } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
 import { formatDistanceToNow } from "date-fns";
 import { SearchInput } from "@/components/search-input";
 import { useActivityLogs } from "@/lib/queries";

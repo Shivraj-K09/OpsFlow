@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 
 export default async function UsersPage() {
   const role = await getCurrentWorkspaceRole();
-  // Both ADMIN and MANAGER need access to this page (managers can manage users)
-  if (role === "USER") {
+  // Only ADMINs can manage workspace members
+  if (role !== "ADMIN") {
     redirect("/dashboard/tasks");
   }
 
