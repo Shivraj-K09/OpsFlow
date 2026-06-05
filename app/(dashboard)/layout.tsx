@@ -12,28 +12,28 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const workspaces = await getWorkspaces();
   const cookieStore = await cookies();
-  let activeWorkspaceId = cookieStore.get("active_workspace")?.value;
-
-  // If no active workspace is set, but the user has workspaces, set the first one
-  if (!activeWorkspaceId && workspaces.length > 0) {
-    activeWorkspaceId = workspaces[0].id;
-  }
-
-  // Also fetch the current user to display in the sidebar
+  const activeWorkspaceIdRaw = cookieStore.get("active_workspace")?.value;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+
+  const [workspaces, { data: { user } }] = await Promise.all([
+    getWorkspaces(),
+    supabase.auth.getUser(),
+  ]);
 
   if (!user) {
     redirect("/login");
   }
 
+  let activeWorkspaceId = activeWorkspaceIdRaw;
+  // If no active workspace is set, but the user has workspaces, set the first one
+  if (!activeWorkspaceId && workspaces.length > 0) {
+    activeWorkspaceId = workspaces[0].id;
+  }
+
   // Fetch user role for the active workspace
   let userRole = "USER";
-  if (user && activeWorkspaceId) {
+  if (activeWorkspaceId) {
     const { data: member } = await supabase
       .from("workspace_members")
       .select("role")

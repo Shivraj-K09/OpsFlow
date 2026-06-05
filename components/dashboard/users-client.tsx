@@ -83,13 +83,9 @@ export function UsersClient({ workspaceId, role, currentUserId }: UsersClientPro
                 <TableHead className="font-normal text-muted-foreground h-11">
                   Role
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
-                  Status
-                </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="font-normal text-muted-foreground h-11 hidden sm:table-cell">
                   Joined Date
                 </TableHead>
-                <TableHead className="w-[50px] font-normal text-muted-foreground h-11"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

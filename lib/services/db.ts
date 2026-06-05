@@ -3,8 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
-export async function getWorkspaces() {
+export const getWorkspaces = cache(async () => {
   const supabase = await createClient();
 
   // RLS ensures the user only sees workspaces they are a member of
@@ -19,9 +20,9 @@ export async function getWorkspaces() {
   }
 
   return workspaces;
-}
+});
 
-export async function getCurrentWorkspaceRole(targetWorkspaceId?: string) {
+export const getCurrentWorkspaceRole = cache(async (targetWorkspaceId?: string) => {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData?.user) return null;
@@ -43,7 +44,7 @@ export async function getCurrentWorkspaceRole(targetWorkspaceId?: string) {
     return "USER";
   }
   return null;
-}
+});
 
 export async function createWorkspace(formData: FormData) {
   const supabase = await createClient();
