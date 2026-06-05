@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { SearchInput } from "@/components/search-input";
 import { Member } from "@/lib/types";
-import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
@@ -67,11 +66,13 @@ export function UsersClient({
   }
 
   const [page, setPage] = useState(1);
+  const [prevQ, setPrevQ] = useState(q);
   const limit = 10;
 
-  useEffect(() => {
+  if (q !== prevQ) {
+    setPrevQ(q);
     setPage(1);
-  }, [q]);
+  }
 
   const totalCount = filteredMembers.length;
   const totalPages = Math.ceil(totalCount / limit) || 1;

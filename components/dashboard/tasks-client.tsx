@@ -41,7 +41,7 @@ import {
   IconCircleCheck,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Empty,
   EmptyDescription,
@@ -168,9 +168,15 @@ export function TasksClient({
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  useEffect(() => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
     setPage(1);
-  }, [searchQuery, statusFilter]);
+  };
+
+  const handleStatusChange = (val: string) => {
+    setStatusFilter(val);
+    setPage(1);
+  };
 
   const getMemberName = (id?: string) => {
     if (!id) return "Unassigned";
@@ -194,7 +200,7 @@ export function TasksClient({
       <div className="bg-background flex flex-col overflow-hidden rounded-md border">
         <div className="flex flex-col justify-between gap-4 border-b p-4 sm:flex-row sm:items-center">
           <div className="flex flex-1 items-center gap-2">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={handleStatusChange}>
               <SelectTrigger className="h-9 w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -214,7 +220,7 @@ export function TasksClient({
                   placeholder="Search tasks..."
                   className="pl-9 text-sm"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearchChange}
                 />
               </InputGroup>
             </div>

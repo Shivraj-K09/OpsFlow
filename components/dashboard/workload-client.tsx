@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -39,6 +38,9 @@ interface WorkloadClientProps {
 export function WorkloadClient({ workspaceId }: WorkloadClientProps) {
   const { data: metrics } = useWorkloadMetrics(workspaceId);
 
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
   if (!metrics) {
     return <div className="p-6">Failed to load workload metrics.</div>;
   }
@@ -51,8 +53,6 @@ export function WorkloadClient({ workspaceId }: WorkloadClientProps) {
   } = metrics;
   const activeTasksCount = metrics.activeTasksCount || 0;
 
-  const [page, setPage] = useState(1);
-  const limit = 10;
   const totalCount = teamMembers.length;
   const totalPages = Math.ceil(totalCount / limit) || 1;
   const paginatedMembers = teamMembers.slice((page - 1) * limit, page * limit);

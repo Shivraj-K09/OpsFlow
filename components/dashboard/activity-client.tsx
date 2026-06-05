@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { ActivityLog } from "@/lib/types";
+import { useState } from "react";
 
+import { SearchInput } from "@/components/search-input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,10 +22,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useActivityLogs } from "@/lib/queries";
 import { IconDownload } from "@tabler/icons-react";
 import { formatDistanceToNow } from "date-fns";
-import { SearchInput } from "@/components/search-input";
-import { useActivityLogs } from "@/lib/queries";
 import { useSearchParams } from "next/navigation";
 
 const colors = [
@@ -65,13 +65,15 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
   // Fetch all logs without pagination for client-side search to work
   const { data } = useActivityLogs(workspaceId);
   const logs = data?.logs || [];
-  
-  const searchParams = useSearchParams();
-  const q = searchParams.get("q") || "";
 
-  useEffect(() => {
+  const searchParams = useSearchParams();
+  const q = searchParams?.get("q") || "";
+  const [prevQ, setPrevQ] = useState(q);
+
+  if (q !== prevQ) {
+    setPrevQ(q);
     setPage(1);
-  }, [q]);
+  }
 
   let filteredLogs = logs;
   if (q) {
@@ -84,7 +86,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
         log.profile?.full_name?.toLowerCase().includes(query),
     );
   }
-  
+
   const limit = 10;
   const totalCount = filteredLogs.length;
   const totalPages = Math.ceil(totalCount / limit) || 1;
@@ -211,16 +213,20 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
             </TableBody>
           </Table>
         </div>
-        <div className="bg-muted/10 shrink-0 flex flex-col sm:flex-row items-center justify-between border-t p-4 gap-4">
+        <div className="bg-muted/10 flex shrink-0 flex-col items-center justify-between gap-4 border-t p-4 sm:flex-row">
           <div className="text-muted-foreground text-xs">
-            Showing {totalCount === 0 ? 0 : (page - 1) * limit + 1}-{Math.min(page * limit, totalCount)} of {totalCount} activities
+            Showing {totalCount === 0 ? 0 : (page - 1) * limit + 1}-
+            {Math.min(page * limit, totalCount)} of {totalCount} activities
           </div>
           <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
                   href="#"
-                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage((p) => Math.max(1, p - 1));
+                  }}
                   className={page === 1 ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
@@ -232,8 +238,13 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
               <PaginationItem>
                 <PaginationNext
                   href="#"
-                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }}
-                  className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage((p) => Math.min(totalPages, p + 1));
+                  }}
+                  className={
+                    page >= totalPages ? "pointer-events-none opacity-50" : ""
+                  }
                 />
               </PaginationItem>
             </PaginationContent>

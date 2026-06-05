@@ -90,23 +90,21 @@ export function SidebarWorkspaceSwitcher({
         w.id !== workspaceToEdit?.id,
     );
 
-  useEffect(() => {
-    if (isCreateWorkspaceOpen) {
-      setCreateName(
-        "",
-      ); /* eslint-disable-line react-hooks/set-state-in-effect */
+  const handleCreateOpenChange = (open: boolean) => {
+    if (open) {
+      setCreateName("");
       setCreateError(null);
     }
-  }, [isCreateWorkspaceOpen]);
+    setIsCreateWorkspaceOpen(open);
+  };
 
-  useEffect(() => {
-    if (workspaceToEdit && isEditWorkspaceOpen) {
-      setEditName(
-        workspaceToEdit.name,
-      ); /* eslint-disable-line react-hooks/set-state-in-effect */
+  const handleEditOpenChange = (open: boolean) => {
+    if (open && workspaceToEdit) {
+      setEditName(workspaceToEdit.name);
       setEditError(null);
     }
-  }, [workspaceToEdit, isEditWorkspaceOpen]);
+    setIsEditWorkspaceOpen(open);
+  };
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -346,13 +344,7 @@ export function SidebarWorkspaceSwitcher({
         </SidebarMenu>
       </SidebarHeader>
 
-      <Dialog
-        open={isCreateWorkspaceOpen}
-        onOpenChange={(open) => {
-          setIsCreateWorkspaceOpen(open);
-          if (!open) setCreateError(null);
-        }}
-      >
+      <Dialog open={isCreateWorkspaceOpen} onOpenChange={handleCreateOpenChange}>
         <DialogContent
           aria-describedby={undefined}
           className="sm:max-w-[450px]!"
@@ -460,13 +452,7 @@ export function SidebarWorkspaceSwitcher({
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        open={isEditWorkspaceOpen}
-        onOpenChange={(open) => {
-          setIsEditWorkspaceOpen(open);
-          if (!open) setEditError(null);
-        }}
-      >
+      <Dialog open={isEditWorkspaceOpen} onOpenChange={handleEditOpenChange}>
         <DialogContent
           aria-describedby={undefined}
           className="sm:max-w-[450px]!"

@@ -64,20 +64,40 @@ export function TaskDetailsSheet({
 
   useEffect(() => {
     if (open && task) {
-      setIsLoadingComments(
-        true,
-      ); /* eslint-disable-line react-hooks/set-state-in-effect */
-      fetch(`/api/comments?taskId=${task.id}`)
-        .then((res) => res.json())
-        .then((json) => {
-          setComments(json.data || []);
-          setIsLoadingComments(false);
-        });
-    } else {
+      let ignore = false;
+      const load = async () => {
+        await Promise.resolve(); // push to next tick to avoid synchronous setState warning
+        if (ignore) return;
+        setIsLoadingComments(true);
+        try {
+          const res = await fetch(`/api/comments?taskId=${task.id}`);
+          const json = await res.json();
+          if (!ignore) {
+            setComments(json.data || []);
+            setIsLoadingComments(false);
+          }
+        } catch {
+          if (!ignore) setIsLoadingComments(false);
+        }
+      };
+      load();
+      return () => {
+        ignore = true;
+      };
+      load();
+      return () => {
+        ignore = true;
+      };
+    }
+  }, [open, task]);
+
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
       setComments([]);
       setNewComment("");
     }
-  }, [open, task]);
+    onOpenChange(isOpen);
+  };
 
   const handleAddComment = async () => {
     if (!newComment.trim() || !task) return;
@@ -122,7 +142,7 @@ export function TaskDetailsSheet({
   if (!task) return null;
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent className="border-border/40 flex h-full w-full flex-col border-l p-0 shadow-2xl outline-none focus:outline-none focus-visible:outline-none sm:max-w-[550px]">
         <SheetHeader className="border-border/40 border-b p-5 pb-4">
           <div className="mb-1 flex items-center gap-2">

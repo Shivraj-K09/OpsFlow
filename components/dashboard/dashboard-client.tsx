@@ -34,6 +34,9 @@ interface DashboardClientProps {
 export function DashboardClient({ workspaceId }: DashboardClientProps) {
   const { data: metrics } = useDashboardMetrics(workspaceId);
 
+  const [page, setPage] = useState(1);
+  const limit = 5;
+
   if (!metrics) {
     return <div className="p-6">Failed to load metrics.</div>;
   }
@@ -46,8 +49,6 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
     chartData = [],
   } = metrics;
 
-  const [page, setPage] = useState(1);
-  const limit = 5;
   const totalCount = recentTasks.length;
   const totalPages = Math.ceil(totalCount / limit) || 1;
   const paginatedTasks = recentTasks.slice((page - 1) * limit, page * limit);
