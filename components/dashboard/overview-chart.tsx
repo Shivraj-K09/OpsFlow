@@ -4,15 +4,6 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
-const chartData = [
-  { month: "Jan", tasks: 186 },
-  { month: "Feb", tasks: 305 },
-  { month: "Mar", tasks: 237 },
-  { month: "Apr", tasks: 173 },
-  { month: "May", tasks: 209 },
-  { month: "Jun", tasks: 214 },
-]
-
 const chartConfig = {
   tasks: {
     label: "Completed Tasks",
@@ -20,12 +11,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function OverviewChart() {
+export function OverviewChart({ chartData = [] }: { chartData?: { month: string, tasks: number }[] }) {
   return (
     <Card className="flex flex-col shadow-sm border-border h-full">
       <CardHeader>
         <CardTitle>Task Completion Trend</CardTitle>
-        <CardDescription>Performance overview from January - June 2026</CardDescription>
+        <CardDescription>Performance overview for the last 6 months</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-4">
         <ChartContainer config={chartConfig} className="w-full h-[300px] aspect-auto">

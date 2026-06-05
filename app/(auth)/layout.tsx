@@ -13,7 +13,7 @@ export default function AuthLayout({
       <div className="hidden lg:block relative w-full h-full p-3">
         <div className="relative w-full h-full overflow-hidden rounded-xl bg-background">
           <Image
-            src="/auth-cover-v3.png"
+            src="/auth-cover.png"
             alt="OpsFlow abstract cover"
             fill
             className="object-cover opacity-70"

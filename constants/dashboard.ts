@@ -3,12 +3,11 @@ import {
   IconClipboardList,
   IconHistory,
   IconLayoutDashboard,
-  IconShieldLock,
   IconUsersGroup,
 } from "@tabler/icons-react";
+import React from "react";
 
 export type Role = "ADMIN" | "MANAGER" | "USER";
-export const CURRENT_USER_ROLE: Role = "ADMIN";
 
 export const SIDEBAR_ROUTES = [
   {
@@ -54,12 +53,6 @@ export const SIDEBAR_ROUTES = [
         icon: IconUsersGroup,
         allowedRoles: ["ADMIN"],
       },
-      {
-        path: "/dashboard/roles",
-        label: "Roles & Access",
-        icon: IconShieldLock,
-        allowedRoles: ["ADMIN"],
-      },
     ],
   },
 ];
@@ -75,5 +68,8 @@ export const BREADCRUMBS = SIDEBAR_ROUTES.reduce(
     });
     return acc;
   },
-  {} as Record<string, { group: string; label: string; icon: any }>,
+  {} as Record<
+    string,
+    { group: string; label: string; icon: React.ElementType }
+  >,
 );
