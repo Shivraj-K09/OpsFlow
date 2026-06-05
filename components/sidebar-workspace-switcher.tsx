@@ -236,7 +236,11 @@ export function SidebarWorkspaceSwitcher({
                         : "Select Workspace"}
                     </span>
                   </div>
-                  <IconSelector className="ml-auto size-4 text-muted-foreground" />
+                  {isPending ? (
+                    <IconLoader2 className="ml-auto size-4 animate-spin text-muted-foreground" />
+                  ) : (
+                    <IconSelector className="ml-auto size-4 text-muted-foreground" />
+                  )}
                 </SidebarMenuButton>
               </PopoverTrigger>
               <PopoverContent
