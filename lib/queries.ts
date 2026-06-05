@@ -35,12 +35,12 @@ export function useWorkspaceMembers(workspaceId: string) {
   });
 }
 
-export function useActivityLogs(workspaceId: string, page: number = 1) {
+export function useActivityLogs(workspaceId: string) {
   return useQuery({
-    queryKey: queryKeys.activity(workspaceId, page),
+    queryKey: queryKeys.activity(workspaceId, 1),
     queryFn: async () => {
       const res = await fetch(
-        `/api/activity?workspaceId=${workspaceId}&page=${page}`,
+        `/api/activity?workspaceId=${workspaceId}&limit=1000`,
       );
       if (!res.ok) throw new Error("Failed to fetch activity");
       const json = await res.json();

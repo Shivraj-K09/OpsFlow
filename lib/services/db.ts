@@ -385,7 +385,7 @@ export async function updateMemberRole(
 export async function getActivityLogs(
   workspaceId: string,
   page: number = 1,
-  limit: number = 20,
+  limit: number = 1000,
 ) {
   const supabase = await createClient();
   const role = await getCurrentWorkspaceRole(workspaceId);

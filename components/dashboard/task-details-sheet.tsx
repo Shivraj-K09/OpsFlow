@@ -8,7 +8,6 @@ import { queryKeys } from "@/lib/queries";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -124,7 +123,7 @@ export function TaskDetailsSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="border-border/40 flex h-full w-full flex-col border-l p-0 shadow-2xl sm:max-w-[550px]">
+      <SheetContent className="border-border/40 flex h-full w-full flex-col border-l p-0 shadow-2xl outline-none focus:outline-none focus-visible:outline-none sm:max-w-[550px]">
         <SheetHeader className="border-border/40 border-b p-5 pb-4">
           <div className="mb-1 flex items-center gap-2">
             <span className="text-muted-foreground text-[13px] font-medium">
@@ -143,9 +142,8 @@ export function TaskDetailsSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="flex-1">
-          <div className="flex flex-col gap-8 p-5">
-            <div className="flex flex-col gap-1">
+        <div className="flex flex-1 flex-col overflow-hidden min-h-0">
+          <div className="flex shrink-0 flex-col gap-1 p-5 pb-6">
               {/* Status Row */}
               <div className="group flex items-center py-1">
                 <span className="text-muted-foreground w-32 text-[13px]">
@@ -230,13 +228,16 @@ export function TaskDetailsSheet({
               </div>
             </div>
 
-            {/* Comments Section */}
-            <div className="border-border/40 flex flex-col gap-4 border-t pt-5">
+          {/* Comments Section */}
+          <div className="border-border/40 flex flex-1 flex-col overflow-hidden border-t min-h-0">
+            <div className="shrink-0 px-5 pb-3 pt-5">
               <h3 className="text-foreground text-[13px] font-medium">
                 Activity
               </h3>
+            </div>
 
-              <div className="flex flex-col gap-6">
+            <div className="flex-1 overflow-y-auto px-5 pb-5">
+              <div className="flex flex-col gap-6 pr-3">
                 {isLoadingComments ? (
                   <div className="text-muted-foreground flex items-center gap-2 text-xs">
                     <IconLoader2 className="size-3 animate-spin" />
@@ -287,7 +288,7 @@ export function TaskDetailsSheet({
               </div>
             </div>
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Add Comment Input */}
         <div className="border-border/40 bg-background/95 border-t p-4 backdrop-blur">

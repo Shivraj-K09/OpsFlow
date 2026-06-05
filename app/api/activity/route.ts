@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     : 1;
   const limit = searchParams.get("limit")
     ? parseInt(searchParams.get("limit")!)
-    : 20;
+    : 1000;
 
   if (!workspaceId) {
     return NextResponse.json(

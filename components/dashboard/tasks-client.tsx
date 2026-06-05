@@ -12,6 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Table,
   TableBody,
   TableCell,
@@ -34,7 +41,7 @@ import {
   IconCircleCheck,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Empty,
   EmptyDescription,
@@ -156,6 +163,14 @@ export function TasksClient({
   const { data: members = [] } = useWorkspaceMembers(workspaceId);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery, statusFilter]);
 
   const getMemberName = (id?: string) => {
     if (!id) return "Unassigned";
@@ -163,19 +178,31 @@ export function TasksClient({
     return member ? member.full_name || member.email : "Unassigned";
   };
 
+  const filteredTasks = tasks.filter((task: Task) => {
+    const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+    const taskStatus = task.status.toLowerCase().replace(" ", "-");
+    const matchesStatus = statusFilter === "all" || taskStatus === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalCount = filteredTasks.length;
+  const totalPages = Math.ceil(totalCount / limit) || 1;
+  const paginatedTasks = filteredTasks.slice((page - 1) * limit, page * limit);
+
   return (
-    <div className="flex h-full w-full flex-col p-6">
-      <div className="bg-background flex flex-1 flex-col overflow-hidden rounded-md border">
+    <div className="flex w-full flex-col p-6">
+      <div className="bg-background flex flex-col overflow-hidden rounded-md border">
         <div className="flex flex-col justify-between gap-4 border-b p-4 sm:flex-row sm:items-center">
           <div className="flex flex-1 items-center gap-2">
-            <Select defaultValue="all">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="h-9 w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Tasks</SelectItem>
-                <SelectItem value="active">Active</SelectItem>
-                <SelectItem value="backlog">Backlog</SelectItem>
+                <SelectItem value="open">Open</SelectItem>
+                <SelectItem value="in-progress">In Progress</SelectItem>
+                <SelectItem value="review">Review</SelectItem>
                 <SelectItem value="done">Done</SelectItem>
               </SelectContent>
             </Select>
@@ -186,6 +213,8 @@ export function TasksClient({
                 <InputGroupInput
                   placeholder="Search tasks..."
                   className="pl-9 text-sm"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </InputGroup>
             </div>
@@ -201,7 +230,7 @@ export function TasksClient({
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="overflow-auto">
           <Table>
             <TableHeader className="bg-muted/50 sticky top-0 z-10">
               <TableRow className="hover:bg-transparent">
@@ -224,7 +253,7 @@ export function TasksClient({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tasks.length === 0 ? (
+              {paginatedTasks.length === 0 ? (
                 <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={6} className="h-72 align-middle">
                     <div className="flex w-full items-center justify-center">
@@ -235,7 +264,9 @@ export function TasksClient({
                           </EmptyMedia>
                           <EmptyTitle>No tasks found</EmptyTitle>
                           <EmptyDescription>
-                            Create one to get started!
+                            {searchQuery || statusFilter !== "all" 
+                              ? "Try adjusting your filters"
+                              : "Create one to get started!"}
                           </EmptyDescription>
                         </EmptyHeader>
                       </Empty>
@@ -243,7 +274,7 @@ export function TasksClient({
                   </TableCell>
                 </TableRow>
               ) : (
-                tasks.map((task: Task) => (
+                paginatedTasks.map((task: Task) => (
                   <TableRow
                     key={task.id}
                     className="hover:bg-muted/50 group cursor-pointer transition-colors"
@@ -279,10 +310,33 @@ export function TasksClient({
             </TableBody>
           </Table>
         </div>
-        <div className="bg-muted/10 sticky bottom-0 z-10 flex items-center justify-between border-t p-4">
+        <div className="bg-muted/10 shrink-0 flex flex-col sm:flex-row items-center justify-between border-t p-4 gap-4">
           <div className="text-muted-foreground text-xs">
-            Showing 1-{tasks.length} of {tasks.length} tasks
+            Showing {totalCount === 0 ? 0 : (page - 1) * limit + 1}-{Math.min(page * limit, totalCount)} of {totalCount} tasks
           </div>
+          <Pagination className="mx-0 w-auto">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }}
+                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              <PaginationItem>
+                <div className="flex h-8 w-8 items-center justify-center text-xs font-medium">
+                  {page}
+                </div>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }}
+                  className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
 

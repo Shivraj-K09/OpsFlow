@@ -1,9 +1,15 @@
 "use client";
 
+import { OverviewChart } from "@/components/dashboard/overview-chart";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Task } from "@/lib/types";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   TableBody,
   TableCell,
@@ -11,14 +17,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useDashboardMetrics } from "@/lib/queries";
+import { Task } from "@/lib/types";
 import {
   IconChartBar,
   IconClipboardList,
   IconFolder,
   IconUsers,
 } from "@tabler/icons-react";
-import { OverviewChart } from "@/components/dashboard/overview-chart";
-import { useDashboardMetrics } from "@/lib/queries";
+import { useState } from "react";
 
 interface DashboardClientProps {
   workspaceId: string;
@@ -38,6 +45,12 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
     recentTasks = [],
     chartData = [],
   } = metrics;
+
+  const [page, setPage] = useState(1);
+  const limit = 5;
+  const totalCount = recentTasks.length;
+  const totalPages = Math.ceil(totalCount / limit) || 1;
+  const paginatedTasks = recentTasks.slice((page - 1) * limit, page * limit);
 
   const totalTasks = activeTaskCount + completedTaskCount;
   const completionRate =
@@ -104,8 +117,8 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
               Recent Tasks
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-1 flex-col overflow-hidden border-t p-0">
-            <ScrollArea className="relative h-[320px] w-full **:data-[slot=scroll-area-scrollbar]:hidden">
+          <CardContent className="flex flex-col overflow-hidden border-t p-0">
+            <div className="overflow-auto">
               <table className="w-full caption-bottom text-sm">
                 <TableHeader>
                   <TableRow className="bg-background/95 sticky top-0 z-20 shadow-sm backdrop-blur-sm hover:bg-transparent">
@@ -121,7 +134,7 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {recentTasks.length === 0 ? (
+                  {paginatedTasks.length === 0 ? (
                     <TableRow className="hover:bg-transparent">
                       <TableCell
                         colSpan={3}
@@ -131,7 +144,7 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    recentTasks.map((task: Task) => (
+                    paginatedTasks.map((task: Task) => (
                       <TableRow
                         key={task.id}
                         className="border-border/50 hover:bg-transparent"
@@ -157,11 +170,47 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                   )}
                 </TableBody>
               </table>
-            </ScrollArea>
-            <div className="bg-muted/10 sticky bottom-0 z-10 flex h-12 items-center justify-start border-t px-4">
+            </div>
+            <div className="bg-muted/10 flex shrink-0 flex-col items-center justify-between gap-4 border-t p-4 sm:flex-row">
               <div className="text-muted-foreground text-xs">
-                Showing {Math.min(recentTasks.length, 8)} recent tasks
+                Showing {totalCount === 0 ? 0 : (page - 1) * limit + 1}-
+                {Math.min(page * limit, totalCount)} of {totalCount} tasks
               </div>
+              <Pagination className="mx-0 w-auto">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((p) => Math.max(1, p - 1));
+                      }}
+                      className={
+                        page === 1 ? "pointer-events-none opacity-50" : ""
+                      }
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <div className="flex h-8 w-8 items-center justify-center text-xs font-medium">
+                      {page}
+                    </div>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPage((p) => Math.min(totalPages, p + 1));
+                      }}
+                      className={
+                        page >= totalPages
+                          ? "pointer-events-none opacity-50"
+                          : ""
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           </CardContent>
         </Card>

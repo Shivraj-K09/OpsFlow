@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ActivityLog } from "@/lib/types";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,6 +10,8 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
 } from "@/components/ui/pagination";
 import {
   Table,
@@ -60,14 +62,16 @@ interface ActivityClientProps {
 
 export function ActivityClient({ workspaceId }: ActivityClientProps) {
   const [page, setPage] = useState(1);
-  const { data } = useActivityLogs(workspaceId, page);
+  // Fetch all logs without pagination for client-side search to work
+  const { data } = useActivityLogs(workspaceId);
   const logs = data?.logs || [];
-  const totalCount = data?.totalCount || 0;
-  const limit = 20;
-  const totalPages = Math.ceil(totalCount / limit) || 1;
-
+  
   const searchParams = useSearchParams();
   const q = searchParams.get("q") || "";
+
+  useEffect(() => {
+    setPage(1);
+  }, [q]);
 
   let filteredLogs = logs;
   if (q) {
@@ -80,6 +84,11 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
         log.profile?.full_name?.toLowerCase().includes(query),
     );
   }
+  
+  const limit = 10;
+  const totalCount = filteredLogs.length;
+  const totalPages = Math.ceil(totalCount / limit) || 1;
+  const paginatedLogs = filteredLogs.slice((page - 1) * limit, page * limit);
 
   const handleExport = () => {
     if (filteredLogs.length === 0) return;
@@ -102,8 +111,8 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col p-6">
-      <div className="bg-background flex flex-1 flex-col overflow-hidden rounded-md border">
+    <div className="flex w-full flex-col p-6">
+      <div className="bg-background flex flex-col overflow-hidden rounded-md border">
         <div className="flex flex-col justify-between gap-4 border-b p-4 sm:flex-row sm:items-center">
           <div className="flex flex-1 items-center gap-2">
             <SearchInput placeholder="Search activity..." />
@@ -116,7 +125,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="overflow-auto">
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
@@ -138,7 +147,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredLogs.length === 0 ? (
+              {paginatedLogs.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={5}
@@ -148,7 +157,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredLogs.map((log: ActivityLog) => {
+                paginatedLogs.map((log: ActivityLog) => {
                   const userName = log.profile?.full_name || "Unknown User";
                   const initials = getInitials(userName);
                   const color = getColorForUser(userName);
@@ -202,21 +211,18 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
             </TableBody>
           </Table>
         </div>
-        <div className="bg-muted/10 sticky bottom-0 z-10 flex items-center justify-between border-t p-4">
+        <div className="bg-muted/10 shrink-0 flex flex-col sm:flex-row items-center justify-between border-t p-4 gap-4">
           <div className="text-muted-foreground text-xs">
-            Showing page {page} of {totalPages} ({totalCount} total activities)
+            Showing {totalCount === 0 ? 0 : (page - 1) * limit + 1}-{Math.min(page * limit, totalCount)} of {totalCount} activities
           </div>
           <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
-                <Button
-                  variant="ghost"
-                  className="h-8 px-3 text-xs"
-                  disabled={page === 1}
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                >
-                  Previous
-                </Button>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }}
+                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                />
               </PaginationItem>
               <PaginationItem>
                 <div className="flex h-8 w-8 items-center justify-center text-xs font-medium">
@@ -224,14 +230,11 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
                 </div>
               </PaginationItem>
               <PaginationItem>
-                <Button
-                  variant="ghost"
-                  className="h-8 px-3 text-xs"
-                  disabled={page >= totalPages}
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                >
-                  Next
-                </Button>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }}
+                  className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

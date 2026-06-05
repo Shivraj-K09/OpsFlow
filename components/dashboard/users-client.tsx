@@ -1,12 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { SearchInput } from "@/components/search-input";
 import { Member } from "@/lib/types";
+import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -65,9 +66,20 @@ export function UsersClient({
     );
   }
 
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    setPage(1);
+  }, [q]);
+
+  const totalCount = filteredMembers.length;
+  const totalPages = Math.ceil(totalCount / limit) || 1;
+  const paginatedMembers = filteredMembers.slice((page - 1) * limit, page * limit);
+
   return (
-    <div className="flex h-full w-full flex-col p-6">
-      <div className="bg-background flex flex-1 flex-col overflow-hidden rounded-md border">
+    <div className="flex w-full flex-col p-6">
+      <div className="bg-background flex flex-col overflow-hidden rounded-md border">
         <div className="flex items-center justify-between gap-4 border-b p-4">
           <div className="flex flex-1 items-center gap-2">
             <SearchInput placeholder="Search users by name or email..." />
@@ -77,7 +89,7 @@ export function UsersClient({
           </div>
         </div>
 
-        <div className="flex-1 overflow-auto">
+        <div className="overflow-auto">
           <Table>
             <TableHeader className="bg-muted/50 sticky top-0 z-10">
               <TableRow className="hover:bg-transparent">
@@ -93,7 +105,7 @@ export function UsersClient({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredMembers.map((user: Member) => {
+              {paginatedMembers.map((user: Member) => {
                 const colorClass = getColorForUser(user.full_name || "");
 
                 return (
@@ -110,22 +122,30 @@ export function UsersClient({
             </TableBody>
           </Table>
         </div>
-        <div className="bg-muted/10 sticky bottom-0 z-10 flex items-center justify-between border-t p-4">
+        <div className="bg-muted/10 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-4 border-t p-4">
           <div className="text-muted-foreground text-xs">
-            Showing 1-{filteredMembers.length} of {filteredMembers.length} users
+            Showing {totalCount === 0 ? 0 : (page - 1) * limit + 1}-{Math.min(page * limit, totalCount)} of {totalCount} users
           </div>
           <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" className="h-8 px-3 text-xs" />
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(1, p - 1)); }}
+                  className={page === 1 ? "pointer-events-none opacity-50" : ""}
+                />
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink href="#" className="h-8 w-8 text-xs" isActive>
-                  1
-                </PaginationLink>
+                <div className="flex h-8 w-8 items-center justify-center text-xs font-medium">
+                  {page}
+                </div>
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext href="#" className="h-8 px-3 text-xs" />
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); setPage((p) => Math.min(totalPages, p + 1)); }}
+                  className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>
