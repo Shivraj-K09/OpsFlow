@@ -1,7 +1,6 @@
 "use client";
 
 // Removed actions.ts import
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,6 +31,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { WORKSPACE_ICONS } from "@/constants/workspace-icon";
+import { Workspace } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import {
   IconHexagonFilled,
@@ -41,9 +41,9 @@ import {
   IconSelector,
   IconSettings,
 } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { Workspace } from "@/lib/types";
 
 export function SidebarWorkspaceSwitcher({
   workspaces = [],

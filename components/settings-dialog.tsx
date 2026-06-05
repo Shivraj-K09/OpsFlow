@@ -55,7 +55,6 @@ export function SettingsDialog({
 
         <div className="p-6 py-5">
           <FieldGroup>
-            {/* Avatar Section */}
             <div className="border-border bg-muted/20 mb-2 flex items-center gap-4 rounded-xl border p-4">
               <Avatar className="border-border h-16 w-16 shrink-0 rounded-lg border shadow-sm after:rounded-lg">
                 {avatarUrl && (
@@ -105,7 +104,6 @@ export function SettingsDialog({
               </InputGroup>
             </Field>
 
-            {/* Theme Section */}
             <Field>
               <FieldLabel>Theme</FieldLabel>
               <div className="bg-muted mt-1 flex items-center gap-1 rounded-lg p-1 shadow-inner">

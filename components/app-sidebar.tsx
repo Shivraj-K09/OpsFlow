@@ -33,7 +33,6 @@ export function AppSidebar({
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
 
-  // Pre-compute visible routes at the top as requested
   const visibleRoutes = SIDEBAR_ROUTES.map((routeGroup) => ({
     ...routeGroup,
     items: routeGroup.items.filter((item) =>

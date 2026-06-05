@@ -8,7 +8,7 @@ export function ThemeToggle() {
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Toggle theme on "d" or "D" keypress, but ignore if modifier keys are held down
+      // Toggle theme on "d" or "D" keypress to change the theme
       if (
         (e.key === "d" || e.key === "D") &&
         !e.ctrlKey &&

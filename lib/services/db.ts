@@ -1,8 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { cache } from "react";
 
 export const getWorkspaces = cache(async () => {
@@ -458,13 +457,9 @@ export async function createTask(formData: FormData, workspaceId: string) {
   const priority = formData.get("priority") as string;
   const assignee_id = formData.get("assignee") as string;
 
-  // We'll map project to a generic field or drop it since it's not in schema
-  // We'll set default status to 'open'
-
   const { data: userData } = await supabase.auth.getUser();
   if (!userData?.user) return { error: "Not logged in" };
 
-  // Explicitly verify membership for the target workspace
   const { data: member } = await supabase
     .from("workspace_members")
     .select("role")
@@ -548,7 +543,6 @@ export async function getWorkloadMetrics(workspaceId: string) {
     if (capacity > 100) overallocatedCount++;
     totalCapacityPercent += Math.min(capacity, 100);
 
-    // Generate consistent colors based on first letter
     const colors = [
       "bg-emerald-600",
       "bg-rose-500",
@@ -600,7 +594,6 @@ export async function acceptWorkspaceInvite(workspaceId: string) {
     .single();
 
   if (!existing) {
-    // Insert new member using Security Definer RPC to bypass RLS
     const { error: insertError } = await supabase.rpc("join_workspace", {
       p_workspace_id: workspaceId,
       p_user_id: userData.user.id,
@@ -640,7 +633,6 @@ export async function getTaskComments(taskId: string) {
     const profile = profiles?.find((p) => p.id === c.user_id);
     const fullName = profile?.full_name || "Unknown Member";
 
-    // Generate color
     const colors = [
       "bg-emerald-600",
       "bg-rose-500",

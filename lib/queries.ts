@@ -1,6 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-// Removed direct imports from actions.ts
-// Client components will now fetch from /api/...
 
 export const queryKeys = {
   tasks: (workspaceId: string) => ["tasks", workspaceId] as const,

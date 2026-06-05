@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import { IconCheck, IconLoader2 } from "@tabler/icons-react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export function AcceptInviteButton({ workspaceId }: { workspaceId: string }) {
