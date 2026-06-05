@@ -62,24 +62,24 @@ export function RegisterForm() {
   };
 
   return (
-    <div className="flex w-full max-w-[360px] flex-col gap-8 animate-in fade-in zoom-in-95 duration-500">
+    <div className="animate-in fade-in zoom-in-95 flex w-full max-w-[360px] flex-col gap-8 duration-500">
       <div className="flex flex-col items-center gap-2 text-center">
-        <IconHexagonFilled className="size-10 text-primary" />
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+        <IconHexagonFilled className="text-primary size-10" />
+        <h1 className="text-foreground mt-2 text-2xl font-semibold tracking-tight">
           Create an account
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Get started with OpsFlow today
         </p>
       </div>
 
       {error && (
-        <div className="p-3 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-md text-center">
+        <div className="rounded-md border border-red-500/20 bg-red-500/10 p-3 text-center text-sm text-red-500">
           {error}
         </div>
       )}
 
-      <div className="flex flex-col w-full">
+      <div className="flex w-full flex-col">
         <AnimatePresence initial={false}>
           {!showEmailForm && (
             <motion.div
@@ -90,7 +90,7 @@ export function RegisterForm() {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="w-full overflow-hidden"
             >
-              <div className="flex flex-col gap-4 w-full pb-1">
+              <div className="flex w-full flex-col gap-4 pb-1">
                 <Button
                   variant="default"
                   className="h-11 w-full"
@@ -131,7 +131,7 @@ export function RegisterForm() {
             >
               <form
                 action={handleSignup}
-                className="flex flex-col gap-6 w-full pt-1"
+                className="flex w-full flex-col gap-6 pt-1"
               >
                 <FieldGroup>
                   <Field>
@@ -174,7 +174,7 @@ export function RegisterForm() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
                         disabled={isPending}
                       >
                         {showPassword ? (
@@ -215,29 +215,29 @@ export function RegisterForm() {
         </AnimatePresence>
       </div>
 
-      <p className="mt-2 text-center text-xs text-muted-foreground">
+      <p className="text-muted-foreground mt-2 text-center text-xs">
         By signing up, you agree to our{" "}
         <a
           href="#"
-          className="font-medium text-foreground hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm whitespace-nowrap"
+          className="text-foreground focus-visible:ring-ring rounded-sm font-medium whitespace-nowrap transition-colors hover:underline focus-visible:ring-1 focus-visible:outline-none"
         >
           Terms
         </a>{" "}
         and{" "}
         <a
           href="#"
-          className="font-medium text-foreground hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm whitespace-nowrap"
+          className="text-foreground focus-visible:ring-ring rounded-sm font-medium whitespace-nowrap transition-colors hover:underline focus-visible:ring-1 focus-visible:outline-none"
         >
           Privacy
         </a>
         .
       </p>
 
-      <p className="mt-4 text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground mt-4 text-center text-sm">
         Already have an account?{" "}
         <Link
           href={`/login?next=${encodeURIComponent(nextUrl)}`}
-          className="font-medium text-foreground hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+          className="text-foreground focus-visible:ring-ring rounded-sm font-medium transition-colors hover:underline focus-visible:ring-1 focus-visible:outline-none"
         >
           Log in
         </Link>

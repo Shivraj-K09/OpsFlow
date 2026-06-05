@@ -77,7 +77,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
         log.action?.toLowerCase().includes(query) ||
         log.target?.toLowerCase().includes(query) ||
         log.workspace_name?.toLowerCase().includes(query) ||
-        log.profile?.full_name?.toLowerCase().includes(query)
+        log.profile?.full_name?.toLowerCase().includes(query),
     );
   }
 
@@ -87,8 +87,9 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
       "data:text/csv;charset=utf-8," +
       "Action,Target,Workspace,Author,Timestamp\n" +
       filteredLogs
-        .map((log: ActivityLog) =>
-          `"${log.action}","${log.target || "-"}","${log.workspace_name}","${log.profile?.full_name || "Unknown"}","${new Date(log.created_at).toLocaleString()}"`
+        .map(
+          (log: ActivityLog) =>
+            `"${log.action}","${log.target || "-"}","${log.workspace_name}","${log.profile?.full_name || "Unknown"}","${new Date(log.created_at).toLocaleString()}"`,
         )
         .join("\n");
     const encodedUri = encodeURI(csvContent);
@@ -101,15 +102,15 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
   };
 
   return (
-    <div className="flex flex-col p-6 h-full w-full">
-      <div className="flex-1 flex flex-col rounded-md border bg-background overflow-hidden">
-        <div className="p-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 flex-1">
+    <div className="flex h-full w-full flex-col p-6">
+      <div className="bg-background flex flex-1 flex-col overflow-hidden rounded-md border">
+        <div className="flex flex-col justify-between gap-4 border-b p-4 sm:flex-row sm:items-center">
+          <div className="flex flex-1 items-center gap-2">
             <SearchInput placeholder="Search activity..." />
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" className="h-9" onClick={handleExport}>
-              <IconDownload className="size-4 mr-2" />
+              <IconDownload className="mr-2 size-4" />
               Export CSV
             </Button>
           </div>
@@ -119,19 +120,19 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead className="font-normal text-muted-foreground h-11 pl-6">
+                <TableHead className="text-muted-foreground h-11 pl-6 font-normal">
                   Action
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Target
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Workspace
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Author
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11 text-right pr-6">
+                <TableHead className="text-muted-foreground h-11 pr-6 text-right font-normal">
                   Timestamp
                 </TableHead>
               </TableRow>
@@ -141,7 +142,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
                 <TableRow>
                   <TableCell
                     colSpan={5}
-                    className="h-48 text-center text-muted-foreground"
+                    className="text-muted-foreground h-48 text-center"
                   >
                     No activity found in this workspace yet.
                   </TableCell>
@@ -154,23 +155,23 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
 
                   return (
                     <TableRow key={log.id} className="hover:bg-muted/30">
-                      <TableCell className="p-4 pl-6 text-sm text-muted-foreground capitalize">
+                      <TableCell className="text-muted-foreground p-4 pl-6 text-sm capitalize">
                         {log.action}
                       </TableCell>
-                      <TableCell className="p-4 text-sm font-medium text-foreground">
+                      <TableCell className="text-foreground p-4 text-sm font-medium">
                         {log.target || "-"}
                       </TableCell>
                       <TableCell className="p-4">
                         <Badge
                           variant="secondary"
-                          className="font-normal text-xs rounded-sm bg-muted/50 text-muted-foreground hover:bg-muted/50 border-transparent"
+                          className="bg-muted/50 text-muted-foreground hover:bg-muted/50 rounded-sm border-transparent text-xs font-normal"
                         >
                           {log.workspace_name}
                         </Badge>
                       </TableCell>
                       <TableCell className="p-4">
                         <div className="flex items-center gap-2">
-                          <Avatar className="h-6 w-6 border border-border">
+                          <Avatar className="border-border h-6 w-6 border">
                             {log.profile?.avatar_url && (
                               <AvatarImage
                                 src={log.profile.avatar_url}
@@ -179,7 +180,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
                               />
                             )}
                             <AvatarFallback
-                              className={`text-white text-[9px] font-medium ${color}`}
+                              className={`text-[9px] font-medium text-white ${color}`}
                             >
                               {initials}
                             </AvatarFallback>
@@ -189,7 +190,7 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="p-4 pr-6 text-right text-sm text-muted-foreground">
+                      <TableCell className="text-muted-foreground p-4 pr-6 text-right text-sm">
                         {formatDistanceToNow(new Date(log.created_at), {
                           addSuffix: true,
                         })}
@@ -201,18 +202,18 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
             </TableBody>
           </Table>
         </div>
-        <div className="p-4 border-t flex items-center justify-between bg-muted/10 sticky bottom-0 z-10">
-          <div className="text-xs text-muted-foreground">
+        <div className="bg-muted/10 sticky bottom-0 z-10 flex items-center justify-between border-t p-4">
+          <div className="text-muted-foreground text-xs">
             Showing page {page} of {totalPages} ({totalCount} total activities)
           </div>
-          <Pagination className="w-auto mx-0">
+          <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
-                <Button 
-                  variant="ghost" 
-                  className="h-8 px-3 text-xs" 
+                <Button
+                  variant="ghost"
+                  className="h-8 px-3 text-xs"
                   disabled={page === 1}
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
                 >
                   Previous
                 </Button>
@@ -223,11 +224,11 @@ export function ActivityClient({ workspaceId }: ActivityClientProps) {
                 </div>
               </PaginationItem>
               <PaginationItem>
-                <Button 
-                  variant="ghost" 
-                  className="h-8 px-3 text-xs" 
+                <Button
+                  variant="ghost"
+                  className="h-8 px-3 text-xs"
                   disabled={page >= totalPages}
-                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 >
                   Next
                 </Button>

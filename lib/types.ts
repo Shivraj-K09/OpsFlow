@@ -72,5 +72,5 @@ export interface ActivityLog {
   user?: User;
   target?: string;
   workspace_name?: string;
-  profile?: { full_name?: string; avatar_url?: string; email?: string; };
+  profile?: { full_name?: string; avatar_url?: string; email?: string };
 }

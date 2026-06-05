@@ -81,11 +81,11 @@ export function UserTableRow({
     <>
       <TableRow
         onClick={() => setIsOpen(true)}
-        className="hover:bg-muted/50 transition-colors cursor-pointer"
+        className="hover:bg-muted/50 cursor-pointer transition-colors"
       >
-        <TableCell className="font-medium p-4">
+        <TableCell className="p-4 font-medium">
           <div className="flex items-center gap-3">
-            <Avatar className="h-9 w-9 border-2 border-background shadow-sm">
+            <Avatar className="border-background h-9 w-9 border-2 shadow-sm">
               <AvatarImage src={member.avatar_url || ""} />
               <AvatarFallback className={`text-white ${avatarColor}`}>
                 {member.full_name?.substring(0, 2).toUpperCase()}
@@ -93,7 +93,7 @@ export function UserTableRow({
             </Avatar>
             <div className="flex flex-col">
               <span className="text-sm font-semibold">{member.full_name}</span>
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <span className="text-muted-foreground flex items-center gap-1 text-xs">
                 {member.email}
               </span>
             </div>
@@ -106,8 +106,8 @@ export function UserTableRow({
               member.role === "admin"
                 ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400"
                 : member.role === "manager"
-                ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
-                : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
+                  ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                  : "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400"
             }`}
           >
             {member.role}
@@ -127,14 +127,17 @@ export function UserTableRow({
           if (!open) setRole(member.role);
         }}
       >
-        <DialogContent aria-describedby={undefined} className="sm:max-w-[500px]!">
+        <DialogContent
+          aria-describedby={undefined}
+          className="sm:max-w-[500px]!"
+        >
           <form onSubmit={onSubmit}>
             <DialogHeader>
               <DialogTitle>User Profile</DialogTitle>
               <div className="flex items-center space-x-4 pt-4 pb-2">
-                <Avatar className="h-14 w-14 shadow-sm border border-border">
+                <Avatar className="border-border h-14 w-14 border shadow-sm">
                   <AvatarImage src={member.avatar_url || ""} />
-                  <AvatarFallback className="text-lg bg-primary/10 text-primary">
+                  <AvatarFallback className="bg-primary/10 text-primary text-lg">
                     {member.full_name?.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -142,38 +145,40 @@ export function UserTableRow({
                   <h3 className="text-lg font-semibold tracking-tight">
                     {member.full_name}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{member.email}</p>
+                  <p className="text-muted-foreground text-sm">
+                    {member.email}
+                  </p>
                 </div>
               </div>
             </DialogHeader>
 
-            <div className="py-2 flex flex-col gap-6">
+            <div className="flex flex-col gap-6 py-2">
               <FieldGroup>
                 <Field className="space-y-1.5">
-                  <FieldLabel className="text-xs text-muted-foreground">
+                  <FieldLabel className="text-muted-foreground text-xs">
                     Full Name
                   </FieldLabel>
                   <Input
                     value={member.full_name || ""}
                     disabled
-                    className="h-10 shadow-none bg-transparent! cursor-not-allowed opacity-70"
+                    className="h-10 cursor-not-allowed bg-transparent! opacity-70 shadow-none"
                   />
                 </Field>
 
                 <Field className="space-y-1.5">
-                  <FieldLabel className="text-xs text-muted-foreground">
+                  <FieldLabel className="text-muted-foreground text-xs">
                     Email Address
                   </FieldLabel>
                   <Input
                     value={member.email || ""}
                     disabled
-                    className="h-10 shadow-none bg-transparent! cursor-not-allowed opacity-70"
+                    className="h-10 cursor-not-allowed bg-transparent! opacity-70 shadow-none"
                   />
                 </Field>
 
                 <div className="grid grid-cols-2 gap-4">
                   <Field className="space-y-1.5">
-                    <FieldLabel className="text-xs text-muted-foreground">
+                    <FieldLabel className="text-muted-foreground text-xs">
                       Joined Workspace
                     </FieldLabel>
                     <Input
@@ -183,12 +188,12 @@ export function UserTableRow({
                           : "-"
                       }
                       disabled
-                      className="h-10 shadow-none bg-transparent! cursor-not-allowed opacity-70"
+                      className="h-10 cursor-not-allowed bg-transparent! opacity-70 shadow-none"
                     />
                   </Field>
 
                   <Field className="space-y-1.5">
-                    <FieldLabel className="text-xs text-muted-foreground">
+                    <FieldLabel className="text-muted-foreground text-xs">
                       Workspace Role
                     </FieldLabel>
                     {canChangeRole ? (
@@ -197,25 +202,25 @@ export function UserTableRow({
                         onValueChange={setRole}
                         disabled={isPending}
                       >
-                        <SelectTrigger className="h-10 shadow-none bg-transparent!">
+                        <SelectTrigger className="h-10 bg-transparent! shadow-none">
                           <SelectValue placeholder="Select role" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="admin">
                             <div className="flex items-center">
-                              <IconShieldLock className="size-4 mr-2 text-indigo-500" />
+                              <IconShieldLock className="mr-2 size-4 text-indigo-500" />
                               Admin
                             </div>
                           </SelectItem>
                           <SelectItem value="manager">
                             <div className="flex items-center">
-                              <IconUserCheck className="size-4 mr-2 text-purple-500" />
+                              <IconUserCheck className="mr-2 size-4 text-purple-500" />
                               Manager
                             </div>
                           </SelectItem>
                           <SelectItem value="member">
                             <div className="flex items-center">
-                              <IconUser className="size-4 mr-2 text-slate-500" />
+                              <IconUser className="mr-2 size-4 text-slate-500" />
                               Member
                             </div>
                           </SelectItem>
@@ -225,11 +230,11 @@ export function UserTableRow({
                       <Input
                         value={role.charAt(0).toUpperCase() + role.slice(1)}
                         disabled
-                        className="h-10 shadow-none bg-transparent! cursor-not-allowed capitalize opacity-70"
+                        className="h-10 cursor-not-allowed bg-transparent! capitalize opacity-70 shadow-none"
                       />
                     )}
                     {!canChangeRole && isSelf && (
-                      <p className="text-[10px] text-muted-foreground mt-1">
+                      <p className="text-muted-foreground mt-1 text-[10px]">
                         You cannot change your own role.
                       </p>
                     )}

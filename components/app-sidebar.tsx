@@ -24,7 +24,12 @@ export function AppSidebar({
   activeWorkspaceId,
   user,
   userRole = "USER",
-}: { workspaces: Workspace[], activeWorkspaceId?: string, user: User | null, userRole?: string }) {
+}: {
+  workspaces: Workspace[];
+  activeWorkspaceId?: string;
+  user: User | null;
+  userRole?: string;
+}) {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
 
@@ -36,7 +41,9 @@ export function AppSidebar({
     ),
   })).filter((routeGroup) => routeGroup.items.length > 0);
 
-  const activeWorkspace = workspaces.find((w: Workspace) => w.id === activeWorkspaceId) || workspaces[0];
+  const activeWorkspace =
+    workspaces.find((w: Workspace) => w.id === activeWorkspaceId) ||
+    workspaces[0];
 
   return (
     <Sidebar variant="sidebar">
@@ -61,7 +68,10 @@ export function AppSidebar({
                         isActive={pathname === item.path}
                         className="cursor-pointer"
                       >
-                        <Link href={item.path} onClick={() => setOpenMobile(false)}>
+                        <Link
+                          href={item.path}
+                          onClick={() => setOpenMobile(false)}
+                        >
                           <IconComponent />
                           <span>{item.label}</span>
                         </Link>

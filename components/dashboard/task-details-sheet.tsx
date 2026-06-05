@@ -65,7 +65,9 @@ export function TaskDetailsSheet({
 
   useEffect(() => {
     if (open && task) {
-      setIsLoadingComments(true); /* eslint-disable-line react-hooks/set-state-in-effect */
+      setIsLoadingComments(
+        true,
+      ); /* eslint-disable-line react-hooks/set-state-in-effect */
       fetch(`/api/comments?taskId=${task.id}`)
         .then((res) => res.json())
         .then((json) => {
@@ -110,7 +112,9 @@ export function TaskDetailsSheet({
         toast.error(`Failed to update ${field}`);
       } else {
         toast.success(`Task updated successfully`);
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks(workspaceId) });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.tasks(workspaceId),
+        });
         router.refresh();
       }
     });
@@ -120,14 +124,14 @@ export function TaskDetailsSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="sm:max-w-[550px] w-full p-0 flex flex-col h-full border-l border-border/40 shadow-2xl">
-        <SheetHeader className="p-5 pb-4 border-b border-border/40">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[13px] text-muted-foreground font-medium">
+      <SheetContent className="border-border/40 flex h-full w-full flex-col border-l p-0 shadow-2xl sm:max-w-[550px]">
+        <SheetHeader className="border-border/40 border-b p-5 pb-4">
+          <div className="mb-1 flex items-center gap-2">
+            <span className="text-muted-foreground text-[13px] font-medium">
               Task
             </span>
-            <span className="text-[13px] text-muted-foreground">›</span>
-            <span className="text-[13px] text-muted-foreground">
+            <span className="text-muted-foreground text-[13px]">›</span>
+            <span className="text-muted-foreground text-[13px]">
               {task.id.slice(0, 8)}
             </span>
           </div>
@@ -140,11 +144,11 @@ export function TaskDetailsSheet({
         </SheetHeader>
 
         <ScrollArea className="flex-1">
-          <div className="p-5 flex flex-col gap-8">
+          <div className="flex flex-col gap-8 p-5">
             <div className="flex flex-col gap-1">
               {/* Status Row */}
-              <div className="flex items-center py-1 group">
-                <span className="w-32 text-[13px] text-muted-foreground">
+              <div className="group flex items-center py-1">
+                <span className="text-muted-foreground w-32 text-[13px]">
                   Status
                 </span>
                 <Select
@@ -152,9 +156,12 @@ export function TaskDetailsSheet({
                   onValueChange={(val) =>
                     handleUpdateField("status", val.replace("-", " "))
                   }
-                  disabled={isPending || (userRole === "USER" && task.assignee_id !== currentUserId)}
+                  disabled={
+                    isPending ||
+                    (userRole === "USER" && task.assignee_id !== currentUserId)
+                  }
                 >
-                  <SelectTrigger className="h-7 w-fit border border-transparent group-hover:border-border/50 shadow-none bg-transparent! text-[13px] hover:bg-muted/40 px-2 rounded-md focus:ring-0">
+                  <SelectTrigger className="group-hover:border-border/50 hover:bg-muted/40 h-7 w-fit rounded-md border border-transparent bg-transparent! px-2 text-[13px] shadow-none focus:ring-0">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -167,8 +174,8 @@ export function TaskDetailsSheet({
               </div>
 
               {/* Assignee Row */}
-              <div className="flex items-center py-1 group">
-                <span className="w-32 text-[13px] text-muted-foreground">
+              <div className="group flex items-center py-1">
+                <span className="text-muted-foreground w-32 text-[13px]">
                   Assignee
                 </span>
                 <Select
@@ -176,7 +183,7 @@ export function TaskDetailsSheet({
                   onValueChange={(val) => handleUpdateField("assignee_id", val)}
                   disabled={isPending || userRole === "USER"}
                 >
-                  <SelectTrigger className="h-7 w-fit border border-transparent group-hover:border-border/50 shadow-none bg-transparent! text-[13px] hover:bg-muted/40 px-2 rounded-md focus:ring-0">
+                  <SelectTrigger className="group-hover:border-border/50 hover:bg-muted/40 h-7 w-fit rounded-md border border-transparent bg-transparent! px-2 text-[13px] shadow-none focus:ring-0">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -191,8 +198,8 @@ export function TaskDetailsSheet({
               </div>
 
               {/* Priority Row */}
-              <div className="flex items-center py-1 group">
-                <span className="w-32 text-[13px] text-muted-foreground">
+              <div className="group flex items-center py-1">
+                <span className="text-muted-foreground w-32 text-[13px]">
                   Priority
                 </span>
                 <Select
@@ -200,7 +207,7 @@ export function TaskDetailsSheet({
                   onValueChange={(val) => handleUpdateField("priority", val)}
                   disabled={isPending || userRole === "USER"}
                 >
-                  <SelectTrigger className="h-7 w-fit border border-transparent group-hover:border-border/50 shadow-none bg-transparent! text-[13px] hover:bg-muted/40 px-2 rounded-md focus:ring-0">
+                  <SelectTrigger className="group-hover:border-border/50 hover:bg-muted/40 h-7 w-fit rounded-md border border-transparent bg-transparent! px-2 text-[13px] shadow-none focus:ring-0">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -213,36 +220,36 @@ export function TaskDetailsSheet({
               </div>
 
               {/* Due Date Row */}
-              <div className="flex items-center py-1 group">
-                <span className="w-32 text-[13px] text-muted-foreground">
+              <div className="group flex items-center py-1">
+                <span className="text-muted-foreground w-32 text-[13px]">
                   Created At
                 </span>
-                <div className="h-7 px-2 flex items-center text-[13px] text-foreground border border-transparent group-hover:border-border/50 rounded-md">
+                <div className="text-foreground group-hover:border-border/50 flex h-7 items-center rounded-md border border-transparent px-2 text-[13px]">
                   {new Date(task.created_at).toLocaleDateString()}
                 </div>
               </div>
             </div>
 
             {/* Comments Section */}
-            <div className="flex flex-col gap-4 pt-5 border-t border-border/40">
-              <h3 className="text-[13px] font-medium text-foreground">
+            <div className="border-border/40 flex flex-col gap-4 border-t pt-5">
+              <h3 className="text-foreground text-[13px] font-medium">
                 Activity
               </h3>
 
               <div className="flex flex-col gap-6">
                 {isLoadingComments ? (
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="text-muted-foreground flex items-center gap-2 text-xs">
                     <IconLoader2 className="size-3 animate-spin" />
                     Loading comments...
                   </div>
                 ) : comments.length === 0 ? (
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     No comments yet.
                   </div>
                 ) : (
                   comments.map((comment) => (
                     <div key={comment.id} className="flex gap-3">
-                      <Avatar className="size-6 mt-0.5 rounded-sm">
+                      <Avatar className="mt-0.5 size-6 rounded-sm">
                         {comment.avatar_url && (
                           <AvatarImage
                             src={comment.avatar_url}
@@ -251,17 +258,17 @@ export function TaskDetailsSheet({
                           />
                         )}
                         <AvatarFallback
-                          className={`text-[10px] text-white rounded-sm ${comment.color}`}
+                          className={`rounded-sm text-[10px] text-white ${comment.color}`}
                         >
                           {comment.initials}
                         </AvatarFallback>
                       </Avatar>
-                      <div className="flex flex-col gap-1 flex-1">
+                      <div className="flex flex-1 flex-col gap-1">
                         <div className="flex items-center gap-2">
                           <span className="text-[13px] font-medium">
                             {comment.author}
                           </span>
-                          <span className="text-[12px] text-muted-foreground">
+                          <span className="text-muted-foreground text-[12px]">
                             {new Date(comment.created_at).toLocaleDateString()}{" "}
                             at{" "}
                             {new Date(comment.created_at).toLocaleTimeString(
@@ -270,7 +277,7 @@ export function TaskDetailsSheet({
                             )}
                           </span>
                         </div>
-                        <div className="text-[13px] text-foreground/80 leading-relaxed wrap-break-word whitespace-pre-wrap">
+                        <div className="text-foreground/80 text-[13px] leading-relaxed wrap-break-word whitespace-pre-wrap">
                           {comment.text}
                         </div>
                       </div>
@@ -283,14 +290,14 @@ export function TaskDetailsSheet({
         </ScrollArea>
 
         {/* Add Comment Input */}
-        <div className="p-4 border-t border-border/40 bg-background/95 backdrop-blur">
-          <div className="rounded-md border border-border/50 bg-muted/10 p-2 focus-within:border-border focus-within:bg-background transition-colors">
+        <div className="border-border/40 bg-background/95 border-t p-4 backdrop-blur">
+          <div className="border-border/50 bg-muted/10 focus-within:border-border focus-within:bg-background rounded-md border p-2 transition-colors">
             <Textarea
               placeholder="Leave a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               disabled={isPending}
-              className="resize-none min-h-[40px] border-none shadow-none bg-transparent! text-[13px] focus-visible:ring-0 p-1"
+              className="min-h-[40px] resize-none border-none bg-transparent! p-1 text-[13px] shadow-none focus-visible:ring-0"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -298,17 +305,17 @@ export function TaskDetailsSheet({
                 }
               }}
             />
-            <div className="flex justify-end mt-2">
+            <div className="mt-2 flex justify-end">
               <Button
                 size="sm"
-                className="h-7 px-3 text-[12px] rounded"
+                className="h-7 rounded px-3 text-[12px]"
                 onClick={handleAddComment}
                 disabled={isPending || !newComment.trim()}
               >
                 {isPending ? (
-                  <IconLoader2 className="size-3 animate-spin mr-1" />
+                  <IconLoader2 className="mr-1 size-3 animate-spin" />
                 ) : (
-                  <IconSend className="size-3 mr-1" />
+                  <IconSend className="mr-1 size-3" />
                 )}
                 Comment
               </Button>

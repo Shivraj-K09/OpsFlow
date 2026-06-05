@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { UsersClient } from "../../../../components/dashboard/users-client";
+import { UsersClient } from "@/components/dashboard/users-client";
 
 export const metadata: Metadata = {
   title: "Users & Teams",

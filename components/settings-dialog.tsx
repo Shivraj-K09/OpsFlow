@@ -44,9 +44,9 @@ export function SettingsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         aria-describedby={undefined}
-        className="sm:max-w-[450px] p-0 overflow-hidden"
+        className="overflow-hidden p-0 sm:max-w-[450px]"
       >
-        <DialogHeader className="px-6 py-4 border-b border-border bg-muted/20">
+        <DialogHeader className="border-border bg-muted/20 border-b px-6 py-4">
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
             Manage your profile and application preferences.
@@ -56,8 +56,8 @@ export function SettingsDialog({
         <div className="p-6 py-5">
           <FieldGroup>
             {/* Avatar Section */}
-            <div className="flex items-center gap-4 p-4 rounded-xl border border-border bg-muted/20 mb-2">
-              <Avatar className="h-16 w-16 shrink-0 border border-border shadow-sm rounded-lg after:rounded-lg">
+            <div className="border-border bg-muted/20 mb-2 flex items-center gap-4 rounded-xl border p-4">
+              <Avatar className="border-border h-16 w-16 shrink-0 rounded-lg border shadow-sm after:rounded-lg">
                 {avatarUrl && (
                   <AvatarImage
                     src={avatarUrl}
@@ -65,22 +65,22 @@ export function SettingsDialog({
                     className="rounded-lg"
                   />
                 )}
-                <AvatarFallback className="text-xl bg-primary text-primary-foreground font-semibold rounded-lg">
+                <AvatarFallback className="bg-primary text-primary-foreground rounded-lg text-xl font-semibold">
                   {initials}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex flex-col gap-1.5 flex-1">
-                <span className="text-sm font-medium leading-none">
+              <div className="flex flex-1 flex-col gap-1.5">
+                <span className="text-sm leading-none font-medium">
                   Profile Picture
                 </span>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-muted-foreground text-xs">
                   PNG, JPG or GIF up to 2MB
                 </span>
               </div>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 shadow-sm shrink-0"
+                className="h-8 shrink-0 shadow-sm"
               >
                 Change
               </Button>
@@ -89,14 +89,14 @@ export function SettingsDialog({
             {/* Inputs Section */}
             <Field>
               <FieldLabel htmlFor="profile-name">Full Name</FieldLabel>
-              <InputGroup className="h-9 bg-background!">
+              <InputGroup className="bg-background! h-9">
                 <InputGroupInput id="profile-name" defaultValue={fullName} />
               </InputGroup>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="profile-email">Email Address</FieldLabel>
-              <InputGroup className="h-9 bg-background!">
+              <InputGroup className="bg-background! h-9">
                 <InputGroupInput
                   id="profile-email"
                   defaultValue={email}
@@ -108,12 +108,12 @@ export function SettingsDialog({
             {/* Theme Section */}
             <Field>
               <FieldLabel>Theme</FieldLabel>
-              <div className="bg-muted p-1 rounded-lg flex items-center gap-1 mt-1 shadow-inner">
+              <div className="bg-muted mt-1 flex items-center gap-1 rounded-lg p-1 shadow-inner">
                 <button
                   onClick={() => setTheme("light")}
-                  className={`flex-1 flex items-center justify-center gap-2 h-8 rounded-md text-xs font-medium transition-all ${
+                  className={`flex h-8 flex-1 items-center justify-center gap-2 rounded-md text-xs font-medium transition-all ${
                     theme === "light"
-                      ? "bg-background shadow-sm text-foreground ring-1 ring-border/50"
+                      ? "bg-background text-foreground ring-border/50 shadow-sm ring-1"
                       : "text-muted-foreground hover:text-foreground hover:bg-background/50"
                   }`}
                 >
@@ -122,9 +122,9 @@ export function SettingsDialog({
                 </button>
                 <button
                   onClick={() => setTheme("dark")}
-                  className={`flex-1 flex items-center justify-center gap-2 h-8 rounded-md text-xs font-medium transition-all ${
+                  className={`flex h-8 flex-1 items-center justify-center gap-2 rounded-md text-xs font-medium transition-all ${
                     theme === "dark"
-                      ? "bg-background shadow-sm text-foreground ring-1 ring-border/50"
+                      ? "bg-background text-foreground ring-border/50 shadow-sm ring-1"
                       : "text-muted-foreground hover:text-foreground hover:bg-background/50"
                   }`}
                 >
@@ -133,9 +133,9 @@ export function SettingsDialog({
                 </button>
                 <button
                   onClick={() => setTheme("system")}
-                  className={`flex-1 flex items-center justify-center gap-2 h-8 rounded-md text-xs font-medium transition-all ${
+                  className={`flex h-8 flex-1 items-center justify-center gap-2 rounded-md text-xs font-medium transition-all ${
                     theme === "system"
-                      ? "bg-background shadow-sm text-foreground ring-1 ring-border/50"
+                      ? "bg-background text-foreground ring-border/50 shadow-sm ring-1"
                       : "text-muted-foreground hover:text-foreground hover:bg-background/50"
                   }`}
                 >
@@ -146,7 +146,7 @@ export function SettingsDialog({
           </FieldGroup>
         </div>
 
-        <DialogFooter className="m-0 px-6 py-5 border-t border-border bg-muted/20 items-center justify-between">
+        <DialogFooter className="border-border bg-muted/20 m-0 items-center justify-between border-t px-6 py-5">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>

@@ -22,29 +22,32 @@ export const getWorkspaces = cache(async () => {
   return workspaces;
 });
 
-export const getCurrentWorkspaceRole = cache(async (targetWorkspaceId?: string) => {
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData?.user) return null;
+export const getCurrentWorkspaceRole = cache(
+  async (targetWorkspaceId?: string) => {
+    const supabase = await createClient();
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData?.user) return null;
 
-  const cookieStore = await cookies();
-  const activeWorkspaceId = targetWorkspaceId || cookieStore.get("active_workspace")?.value;
-  if (!activeWorkspaceId) return null;
+    const cookieStore = await cookies();
+    const activeWorkspaceId =
+      targetWorkspaceId || cookieStore.get("active_workspace")?.value;
+    if (!activeWorkspaceId) return null;
 
-  const { data: member } = await supabase
-    .from("workspace_members")
-    .select("role")
-    .eq("workspace_id", activeWorkspaceId)
-    .eq("user_id", userData.user.id)
-    .single();
+    const { data: member } = await supabase
+      .from("workspace_members")
+      .select("role")
+      .eq("workspace_id", activeWorkspaceId)
+      .eq("user_id", userData.user.id)
+      .single();
 
-  if (member) {
-    if (member.role === "admin") return "ADMIN";
-    if (member.role === "manager") return "MANAGER";
-    return "USER";
-  }
-  return null;
-});
+    if (member) {
+      if (member.role === "admin") return "ADMIN";
+      if (member.role === "manager") return "MANAGER";
+      return "USER";
+    }
+    return null;
+  },
+);
 
 export async function createWorkspace(formData: FormData) {
   const supabase = await createClient();
@@ -113,7 +116,9 @@ export async function setActiveWorkspace(workspaceId: string) {
 export async function updateWorkspace(formData: FormData, workspaceId: string) {
   const role = await getCurrentWorkspaceRole(workspaceId);
   if (role !== "ADMIN") {
-    return { error: "Unauthorized: Only administrators can modify the workspace." };
+    return {
+      error: "Unauthorized: Only administrators can modify the workspace.",
+    };
   }
 
   const supabase = await createClient();
@@ -153,7 +158,9 @@ export async function updateWorkspace(formData: FormData, workspaceId: string) {
 export async function deleteWorkspace(workspaceId: string) {
   const role = await getCurrentWorkspaceRole(workspaceId);
   if (role !== "ADMIN") {
-    return { error: "Unauthorized: Only administrators can delete the workspace." };
+    return {
+      error: "Unauthorized: Only administrators can delete the workspace.",
+    };
   }
 
   const supabase = await createClient();
@@ -204,7 +211,7 @@ export async function getDashboardMetrics(workspaceId: string) {
     { count: memberCount },
     { count: activeTaskCount },
     { data: recentTasks },
-    { data: doneTasks }
+    { data: doneTasks },
   ] = await Promise.all([
     supabase
       .from("workspace_members")
@@ -225,7 +232,7 @@ export async function getDashboardMetrics(workspaceId: string) {
       .from("tasks")
       .select("created_at")
       .eq("workspace_id", workspaceId)
-      .eq("status", "done")
+      .eq("status", "done"),
   ]);
 
   const tasksList = doneTasks || [];
@@ -313,7 +320,7 @@ export async function getWorkspaceMembers(workspaceId: string) {
 
   const adminClient = createAdminClient();
   const userResponses = await Promise.all(
-    userIds.map((id) => adminClient.auth.admin.getUserById(id))
+    userIds.map((id) => adminClient.auth.admin.getUserById(id)),
   );
 
   const emailsMap = new Map<string, string>();
@@ -338,7 +345,11 @@ export async function getWorkspaceMembers(workspaceId: string) {
   return enrichedMembers;
 }
 
-export async function updateMemberRole(userId: string, newRole: string, workspaceId: string) {
+export async function updateMemberRole(
+  userId: string,
+  newRole: string,
+  workspaceId: string,
+) {
   if (!workspaceId) return { error: "Workspace ID is required" };
 
   const supabase = await createClient();
@@ -372,7 +383,11 @@ export async function updateMemberRole(userId: string, newRole: string, workspac
   return { success: true };
 }
 
-export async function getActivityLogs(workspaceId: string, page: number = 1, limit: number = 20) {
+export async function getActivityLogs(
+  workspaceId: string,
+  page: number = 1,
+  limit: number = 20,
+) {
   const supabase = await createClient();
   const role = await getCurrentWorkspaceRole(workspaceId);
   if (!workspaceId || !role) return { logs: [], totalCount: 0 };
@@ -381,7 +396,11 @@ export async function getActivityLogs(workspaceId: string, page: number = 1, lim
   const to = from + limit - 1;
 
   // Query activity logs
-  const { data: logs, error, count } = await supabase
+  const {
+    data: logs,
+    error,
+    count,
+  } = await supabase
     .from("activity_logs")
     .select("*", { count: "exact" })
     .eq("workspace_id", workspaceId)
@@ -405,8 +424,10 @@ export async function getActivityLogs(workspaceId: string, page: number = 1, lim
   const workspaceName = workspace?.name || "Workspace";
 
   // Get unique user IDs to fetch profiles
-  const userIds = [...new Set(logs.filter(log => log.user_id).map(log => log.user_id))];
-  
+  const userIds = [
+    ...new Set(logs.filter((log) => log.user_id).map((log) => log.user_id)),
+  ];
+
   let profiles: Record<string, unknown>[] = [];
   if (userIds.length > 0) {
     const { data: profilesData } = await supabase
@@ -417,12 +438,12 @@ export async function getActivityLogs(workspaceId: string, page: number = 1, lim
   }
 
   // Merge logs with profiles and workspace name
-  const enrichedLogs = logs.map(log => {
-    const profile = profiles.find(p => p.id === log.user_id);
+  const enrichedLogs = logs.map((log) => {
+    const profile = profiles.find((p) => p.id === log.user_id);
     return {
       ...log,
       profile: profile || { full_name: "Unknown User", avatar_url: null },
-      workspace_name: workspaceName
+      workspace_name: workspaceName,
     };
   });
 
@@ -583,9 +604,9 @@ export async function acceptWorkspaceInvite(workspaceId: string) {
     const { error: insertError } = await supabase.rpc("join_workspace", {
       p_workspace_id: workspaceId,
       p_user_id: userData.user.id,
-      p_role: "member"
+      p_role: "member",
     });
-      
+
     if (insertError) {
       console.error("Failed to join workspace:", insertError.message);
       return { error: insertError.message };
@@ -595,7 +616,7 @@ export async function acceptWorkspaceInvite(workspaceId: string) {
   // Set the cookie
   const cookieStore = await cookies();
   cookieStore.set("active_workspace", workspaceId, { path: "/" });
-  
+
   return { success: true };
 }
 
@@ -609,26 +630,33 @@ export async function getTaskComments(taskId: string) {
 
   if (error || !comments) return [];
 
-  const userIds = Array.from(new Set(comments.map(c => c.user_id)));
+  const userIds = Array.from(new Set(comments.map((c) => c.user_id)));
   const { data: profiles } = await supabase
     .from("profiles")
     .select("id, full_name, avatar_url")
     .in("id", userIds);
 
-  return comments.map(c => {
-    const profile = profiles?.find(p => p.id === c.user_id);
+  return comments.map((c) => {
+    const profile = profiles?.find((p) => p.id === c.user_id);
     const fullName = profile?.full_name || "Unknown Member";
-    
+
     // Generate color
-    const colors = ["bg-emerald-600", "bg-rose-500", "bg-blue-500", "bg-amber-500", "bg-purple-500", "bg-indigo-500"];
+    const colors = [
+      "bg-emerald-600",
+      "bg-rose-500",
+      "bg-blue-500",
+      "bg-amber-500",
+      "bg-purple-500",
+      "bg-indigo-500",
+    ];
     const charCode = fullName.charCodeAt(0) || 0;
-    
+
     return {
       ...c,
       author: fullName,
       initials: fullName.substring(0, 2).toUpperCase(),
       avatar_url: profile?.avatar_url,
-      color: colors[charCode % colors.length]
+      color: colors[charCode % colors.length],
     };
   });
 }
@@ -638,21 +666,29 @@ export async function addTaskComment(taskId: string, text: string) {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return { error: "Not authenticated" };
 
-  const { error } = await supabase
-    .from("task_comments")
-    .insert({
-      task_id: taskId,
-      text: text,
-      user_id: userData.user.id
-    });
+  const { error } = await supabase.from("task_comments").insert({
+    task_id: taskId,
+    text: text,
+    user_id: userData.user.id,
+  });
 
   if (error) return { error: error.message };
   return { success: true };
 }
 
-export async function updateTaskField(taskId: string, field: string, value: string | null) {
+export async function updateTaskField(
+  taskId: string,
+  field: string,
+  value: string | null,
+) {
   // Prevent Mass Assignment Vulnerability
-  const allowedFields = ["title", "description", "status", "priority", "assignee_id"];
+  const allowedFields = [
+    "title",
+    "description",
+    "status",
+    "priority",
+    "assignee_id",
+  ];
   if (!allowedFields.includes(field)) {
     return { error: "Invalid task field provided." };
   }
@@ -676,24 +712,28 @@ export async function updateTaskField(taskId: string, field: string, value: stri
   if (role === "USER") {
     // Standard users can only update status
     if (field !== "status") {
-      return { error: "Unauthorized: You can only update the status of your tasks." };
+      return {
+        error: "Unauthorized: You can only update the status of your tasks.",
+      };
     }
     // They must be the assignee
     if (task.assignee_id !== userData.user.id) {
-      return { error: "Unauthorized: You can only update tasks assigned to you." };
+      return {
+        error: "Unauthorized: You can only update tasks assigned to you.",
+      };
     }
   }
 
   // If the value is 'none' for assignee, convert it to null
-  const finalValue = (field === 'assignee_id' && value === 'none') ? null : value;
-  
+  const finalValue = field === "assignee_id" && value === "none" ? null : value;
+
   const { error } = await supabase
     .from("tasks")
     .update({ [field]: finalValue })
     .eq("id", taskId);
 
   if (error) return { error: error.message };
-  
+
   revalidatePath("/dashboard/tasks");
   revalidatePath("/dashboard/workload");
   return { success: true };

@@ -4,15 +4,19 @@ import { revalidatePath } from "next/cache";
 
 export async function POST(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
   try {
     const res = await acceptWorkspaceInvite(id);
-    if (res?.error) return NextResponse.json({ error: res.error }, { status: 400 });
+    if (res?.error)
+      return NextResponse.json({ error: res.error }, { status: 400 });
     revalidatePath("/");
     return NextResponse.json({ success: true });
   } catch (error: unknown) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

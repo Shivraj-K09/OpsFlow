@@ -57,7 +57,9 @@ export function SidebarWorkspaceSwitcher({
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
   const [isEditWorkspaceOpen, setIsEditWorkspaceOpen] = useState(false);
-  const [workspaceToEdit, setWorkspaceToEdit] = useState<Workspace | null>(null);
+  const [workspaceToEdit, setWorkspaceToEdit] = useState<Workspace | null>(
+    null,
+  );
   const [selectedIconId, setSelectedIconId] = useState("hexagon");
   const [searchQuery, setSearchQuery] = useState("");
   const [createName, setCreateName] = useState("");
@@ -67,7 +69,8 @@ export function SidebarWorkspaceSwitcher({
   const [isPending, startTransition] = useTransition();
 
   const activeWorkspace =
-    workspaces.find((w: Workspace) => w.id === activeWorkspaceId) || workspaces[0];
+    workspaces.find((w: Workspace) => w.id === activeWorkspaceId) ||
+    workspaces[0];
 
   const filteredWorkspaces = workspaces.filter((w: Workspace) =>
     w.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -76,7 +79,8 @@ export function SidebarWorkspaceSwitcher({
   const isCreateDuplicate =
     createName.trim() !== "" &&
     workspaces.some(
-      (w: Workspace) => w.name.toLowerCase() === createName.trim().toLowerCase(),
+      (w: Workspace) =>
+        w.name.toLowerCase() === createName.trim().toLowerCase(),
     );
   const isEditDuplicate =
     editName.trim() !== "" &&
@@ -88,14 +92,18 @@ export function SidebarWorkspaceSwitcher({
 
   useEffect(() => {
     if (isCreateWorkspaceOpen) {
-      setCreateName(""); /* eslint-disable-line react-hooks/set-state-in-effect */
+      setCreateName(
+        "",
+      ); /* eslint-disable-line react-hooks/set-state-in-effect */
       setCreateError(null);
     }
   }, [isCreateWorkspaceOpen]);
 
   useEffect(() => {
     if (workspaceToEdit && isEditWorkspaceOpen) {
-      setEditName(workspaceToEdit.name); /* eslint-disable-line react-hooks/set-state-in-effect */
+      setEditName(
+        workspaceToEdit.name,
+      ); /* eslint-disable-line react-hooks/set-state-in-effect */
       setEditError(null);
     }
   }, [workspaceToEdit, isEditWorkspaceOpen]);
@@ -228,7 +236,7 @@ export function SidebarWorkspaceSwitcher({
             <Popover open={isWorkspaceOpen} onOpenChange={setIsWorkspaceOpen}>
               <PopoverTrigger asChild>
                 <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground h-10 cursor-pointer">
-                  <div className="flex size-6 items-center justify-center text-primary">
+                  <div className="text-primary flex size-6 items-center justify-center">
                     <ActiveWIcon className="size-5" />
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
@@ -239,23 +247,23 @@ export function SidebarWorkspaceSwitcher({
                     </span>
                   </div>
                   {isPending ? (
-                    <IconLoader2 className="ml-auto size-4 animate-spin text-muted-foreground" />
+                    <IconLoader2 className="text-muted-foreground ml-auto size-4 animate-spin" />
                   ) : (
-                    <IconSelector className="ml-auto size-4 text-muted-foreground" />
+                    <IconSelector className="text-muted-foreground ml-auto size-4" />
                   )}
                 </SidebarMenuButton>
               </PopoverTrigger>
               <PopoverContent
-                className="w-[--radix-popover-trigger-width] min-w-56 p-0 block overflow-hidden rounded-lg"
+                className="block w-[--radix-popover-trigger-width] min-w-56 overflow-hidden rounded-lg p-0"
                 align="start"
                 side="bottom"
                 sideOffset={8}
               >
-                <div className="relative border-b border-border">
-                  <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <div className="border-border relative border-b">
+                  <IconSearch className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2" />
                   <Input
                     placeholder="Search workspace..."
-                    className="pl-9 h-10 text-sm rounded-none border-none bg-transparent shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="h-10 rounded-none border-none bg-transparent pl-9 text-sm shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => e.stopPropagation()}
@@ -292,23 +300,25 @@ export function SidebarWorkspaceSwitcher({
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="size-6 ml-auto hover:bg-muted"
+                                className="hover:bg-muted ml-auto size-6"
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   setWorkspaceToEdit(workspace);
-                                  setSelectedIconId(workspace.icon || "hexagon");
+                                  setSelectedIconId(
+                                    workspace.icon || "hexagon",
+                                  );
                                   setIsEditWorkspaceOpen(true);
                                   setIsWorkspaceOpen(false);
                                 }}
                               >
-                                <IconSettings className="size-3.5 text-muted-foreground" />
+                                <IconSettings className="text-muted-foreground size-3.5" />
                               </Button>
                             )}
                           </PopoverItem>
                         );
                       })}
                       {filteredWorkspaces.length === 0 && (
-                        <div className="p-2 text-sm text-muted-foreground text-center">
+                        <div className="text-muted-foreground p-2 text-center text-sm">
                           No workspaces found
                         </div>
                       )}
@@ -343,8 +353,11 @@ export function SidebarWorkspaceSwitcher({
           if (!open) setCreateError(null);
         }}
       >
-        <DialogContent aria-describedby={undefined} className="sm:max-w-[450px]!">
-          <DialogHeader className="-mx-4 -mt-4 p-4 border-b bg-muted/50 rounded-t-xl">
+        <DialogContent
+          aria-describedby={undefined}
+          className="sm:max-w-[450px]!"
+        >
+          <DialogHeader className="bg-muted/50 -mx-4 -mt-4 rounded-t-xl border-b p-4">
             <DialogTitle>Create Workspace</DialogTitle>
             <DialogDescription>
               Workspaces are shared environments for team collaboration.
@@ -356,7 +369,7 @@ export function SidebarWorkspaceSwitcher({
               <Field className="space-y-1.5">
                 <FieldLabel
                   htmlFor="workspace-name"
-                  className="text-xs text-muted-foreground"
+                  className="text-muted-foreground text-xs"
                 >
                   Workspace Name
                 </FieldLabel>
@@ -408,7 +421,7 @@ export function SidebarWorkspaceSwitcher({
                       setCreateError(null);
                     }}
                     className={cn(
-                      "h-10 shadow-none bg-transparent! flex-1",
+                      "h-10 flex-1 bg-transparent! shadow-none",
                       (createError || isCreateDuplicate) &&
                         "border-destructive",
                     )}
@@ -416,7 +429,7 @@ export function SidebarWorkspaceSwitcher({
                   />
                 </div>
                 {(createError || isCreateDuplicate) && (
-                  <p className="text-[0.8rem] font-medium text-destructive">
+                  <p className="text-destructive text-[0.8rem] font-medium">
                     {createError ||
                       "You already have a workspace with this name."}
                   </p>
@@ -454,18 +467,18 @@ export function SidebarWorkspaceSwitcher({
           if (!open) setEditError(null);
         }}
       >
-        <DialogContent aria-describedby={undefined} className="sm:max-w-[450px]!">
-          <DialogHeader className="-mx-4 -mt-4 p-4 border-b bg-muted/50 rounded-t-xl">
+        <DialogContent
+          aria-describedby={undefined}
+          className="sm:max-w-[450px]!"
+        >
+          <DialogHeader className="bg-muted/50 -mx-4 -mt-4 rounded-t-xl border-b p-4">
             <DialogTitle>Edit Workspace</DialogTitle>
             <DialogDescription>
               Update your workspace name and icon, or permanently delete it.
             </DialogDescription>
           </DialogHeader>
           {workspaceToEdit && (
-            <form
-              onSubmit={onEditWorkspace}
-              className="flex flex-col gap-4"
-            >
+            <form onSubmit={onEditWorkspace} className="flex flex-col gap-4">
               <input
                 type="hidden"
                 name="workspace_icon"
@@ -475,7 +488,7 @@ export function SidebarWorkspaceSwitcher({
                 <Field className="space-y-1.5">
                   <FieldLabel
                     htmlFor="edit-workspace-name"
-                    className="text-xs text-muted-foreground"
+                    className="text-muted-foreground text-xs"
                   >
                     Workspace Name
                   </FieldLabel>
@@ -527,21 +540,21 @@ export function SidebarWorkspaceSwitcher({
                       placeholder="e.g. Acme Inc."
                       required
                       className={cn(
-                        "h-10 shadow-none bg-transparent! flex-1",
+                        "h-10 flex-1 bg-transparent! shadow-none",
                         (editError || isEditDuplicate) && "border-destructive",
                       )}
                       disabled={isPending}
                     />
                   </div>
                   {(editError || isEditDuplicate) && (
-                    <p className="text-[0.8rem] font-medium text-destructive">
+                    <p className="text-destructive text-[0.8rem] font-medium">
                       {editError ||
                         "You already have a workspace with this name."}
                     </p>
                   )}
                 </Field>
               </FieldGroup>
-              <DialogFooter className="sm:justify-between mt-2">
+              <DialogFooter className="mt-2 sm:justify-between">
                 <Button
                   variant="destructive"
                   type="button"

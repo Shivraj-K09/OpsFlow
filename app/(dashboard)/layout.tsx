@@ -1,11 +1,11 @@
 import { AppHeader } from "@/components/app-header";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import React from "react";
 import { getWorkspaces } from "@/lib/services/db";
-import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import React from "react";
 
 export default async function DashboardLayout({
   children,
@@ -16,10 +16,12 @@ export default async function DashboardLayout({
   const activeWorkspaceIdRaw = cookieStore.get("active_workspace")?.value;
   const supabase = await createClient();
 
-  const [workspaces, { data: { user } }] = await Promise.all([
-    getWorkspaces(),
-    supabase.auth.getUser(),
-  ]);
+  const [
+    workspaces,
+    {
+      data: { user },
+    },
+  ] = await Promise.all([getWorkspaces(), supabase.auth.getUser()]);
 
   if (!user) {
     redirect("/login");
@@ -40,9 +42,10 @@ export default async function DashboardLayout({
       .eq("workspace_id", activeWorkspaceId)
       .eq("user_id", user.id)
       .single();
-      
+
     if (member) {
-      if (member.role === "owner" || member.role === "admin") userRole = "ADMIN";
+      if (member.role === "owner" || member.role === "admin")
+        userRole = "ADMIN";
       else if (member.role === "manager") userRole = "MANAGER";
       else userRole = "USER";
     }
@@ -58,7 +61,7 @@ export default async function DashboardLayout({
       />
       <SidebarInset>
         <AppHeader />
-        <main className="flex-1 flex flex-col overflow-y-auto overflow-x-hidden min-h-0">
+        <main className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
           {children}
         </main>
       </SidebarInset>

@@ -4,7 +4,7 @@ import { getQueryClient } from "@/lib/query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queries";
 import type { Metadata } from "next";
-import { ActivityClient } from "../../../../components/dashboard/activity-client";
+import { ActivityClient } from "@/components/dashboard/activity-client";
 
 export const metadata: Metadata = {
   title: "Activity Logs",

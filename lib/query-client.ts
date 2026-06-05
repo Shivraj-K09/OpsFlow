@@ -11,5 +11,5 @@ export const getQueryClient = cache(
           refetchOnWindowFocus: true, // Auto-update when user switches tabs back (faux-realtime)
         },
       },
-    })
+    }),
 );

@@ -12,9 +12,11 @@ export function AcceptInviteButton({ workspaceId }: { workspaceId: string }) {
 
   const handleAccept = async () => {
     setIsPending(true);
-    const res = await fetch(`/api/invites/${workspaceId}/accept`, { method: "POST" });
+    const res = await fetch(`/api/invites/${workspaceId}/accept`, {
+      method: "POST",
+    });
     const data = await res.json();
-    
+
     if (!res.ok || data.error) {
       toast.error(data.error || "Failed to accept invite");
       setIsPending(false);
@@ -26,10 +28,10 @@ export function AcceptInviteButton({ workspaceId }: { workspaceId: string }) {
   };
 
   return (
-    <Button 
+    <Button
       onClick={handleAccept}
       disabled={isPending}
-      className="w-full h-11 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white"
+      className="h-11 w-full rounded-lg bg-emerald-600 text-white hover:bg-emerald-700"
     >
       {isPending ? (
         <IconLoader2 className="mr-2 size-4 animate-spin" />

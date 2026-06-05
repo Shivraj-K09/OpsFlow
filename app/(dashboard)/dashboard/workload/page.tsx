@@ -1,14 +1,11 @@
 import { cookies } from "next/headers";
-import {
-  getWorkloadMetrics,
-  getCurrentWorkspaceRole,
-} from "@/lib/services/db";
+import { getWorkloadMetrics, getCurrentWorkspaceRole } from "@/lib/services/db";
 import { getQueryClient } from "@/lib/query-client";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queries";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { WorkloadClient } from "../../../../components/dashboard/workload-client";
+import { WorkloadClient } from "@/components/dashboard/workload-client";
 
 export const metadata: Metadata = {
   title: "Workload",

@@ -50,12 +50,14 @@ export function CreateTaskDialog({
         body: formData,
       });
       const data = await res.json();
-      
+
       if (!res.ok || data.error) {
         toast.error(data.error || "Failed to create task");
       } else {
         toast.success("Task created successfully!");
-        queryClient.invalidateQueries({ queryKey: queryKeys.tasks(workspaceId) });
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.tasks(workspaceId),
+        });
         router.refresh();
         onOpenChange(false);
       }
@@ -72,12 +74,12 @@ export function CreateTaskDialog({
         </DialogHeader>
 
         <form action={onSubmit}>
-          <div className="py-2 flex flex-col gap-6">
+          <div className="flex flex-col gap-6 py-2">
             <FieldGroup>
               <Field className="space-y-1.5">
                 <FieldLabel
                   htmlFor="title"
-                  className="text-xs text-muted-foreground"
+                  className="text-muted-foreground text-xs"
                 >
                   Task Title
                 </FieldLabel>
@@ -86,7 +88,7 @@ export function CreateTaskDialog({
                   id="title"
                   required
                   placeholder="e.g. Update authentication flow"
-                  className="h-10 shadow-none bg-transparent!"
+                  className="h-10 bg-transparent! shadow-none"
                 />
               </Field>
 
@@ -94,14 +96,14 @@ export function CreateTaskDialog({
                 <Field className="space-y-1.5">
                   <FieldLabel
                     htmlFor="priority"
-                    className="text-xs text-muted-foreground"
+                    className="text-muted-foreground text-xs"
                   >
                     Priority
                   </FieldLabel>
                   <Select name="priority" defaultValue="medium">
                     <SelectTrigger
                       id="priority"
-                      className="h-10 shadow-none bg-transparent!"
+                      className="h-10 bg-transparent! shadow-none"
                     >
                       <SelectValue placeholder="Select priority" />
                     </SelectTrigger>
@@ -117,14 +119,14 @@ export function CreateTaskDialog({
                 <Field className="space-y-1.5">
                   <FieldLabel
                     htmlFor="assignee"
-                    className="text-xs text-muted-foreground"
+                    className="text-muted-foreground text-xs"
                   >
                     Assignee
                   </FieldLabel>
                   <Select name="assignee" defaultValue="none">
                     <SelectTrigger
                       id="assignee"
-                      className="h-10 shadow-none bg-transparent!"
+                      className="h-10 bg-transparent! shadow-none"
                     >
                       <SelectValue placeholder="Select team member" />
                     </SelectTrigger>
@@ -143,7 +145,7 @@ export function CreateTaskDialog({
               <Field className="space-y-1.5">
                 <FieldLabel
                   htmlFor="description"
-                  className="text-xs text-muted-foreground"
+                  className="text-muted-foreground text-xs"
                 >
                   Description (Optional)
                 </FieldLabel>
@@ -151,7 +153,7 @@ export function CreateTaskDialog({
                   name="description"
                   id="description"
                   placeholder="Add any extra context for this task..."
-                  className="resize-none min-h-[100px] shadow-none bg-transparent!"
+                  className="min-h-[100px] resize-none bg-transparent! shadow-none"
                 />
               </Field>
             </FieldGroup>

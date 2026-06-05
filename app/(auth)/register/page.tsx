@@ -13,7 +13,7 @@ export default function Register() {
     <Suspense
       fallback={
         <div className="flex justify-center p-8">
-          <IconLoader2 className="animate-spin text-muted-foreground" />
+          <IconLoader2 className="text-muted-foreground animate-spin" />
         </div>
       }
     >

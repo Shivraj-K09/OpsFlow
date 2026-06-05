@@ -14,11 +14,17 @@ export async function POST(request: Request) {
     const { error } = await supabase.auth.signInWithPassword(data);
 
     if (error) {
-      return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+      return NextResponse.json(
+        { error: (error as Error).message },
+        { status: 400 },
+      );
     }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error: unknown) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    );
   }
 }

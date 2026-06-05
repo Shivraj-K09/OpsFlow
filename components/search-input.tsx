@@ -9,7 +9,7 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  
+
   const [query, setQuery] = useState(searchParams.get("q") || "");
 
   useEffect(() => {
@@ -28,11 +28,11 @@ export function SearchInput({ placeholder }: { placeholder: string }) {
 
   return (
     <div className="relative w-full sm:w-80">
-      <IconSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <IconSearch className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
       <InputGroup className="h-9">
-        <InputGroupInput 
-          placeholder={placeholder} 
-          className="pl-9 text-sm" 
+        <InputGroupInput
+          placeholder={placeholder}
+          className="pl-9 text-sm"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />

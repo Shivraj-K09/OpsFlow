@@ -74,7 +74,7 @@ export function UserActions({
       <DropdownMenuContent align="end">
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
-            <IconShieldLock className="size-4 mr-2" />
+            <IconShieldLock className="mr-2 size-4" />
             Change Role
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
@@ -83,21 +83,21 @@ export function UserActions({
                 onClick={() => handleRoleChange("admin")}
                 disabled={member.role === "admin"}
               >
-                <IconShieldLock className="size-4 mr-2 text-indigo-500" />
+                <IconShieldLock className="mr-2 size-4 text-indigo-500" />
                 Admin
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleRoleChange("manager")}
                 disabled={member.role === "manager"}
               >
-                <IconUserCheck className="size-4 mr-2 text-purple-500" />
+                <IconUserCheck className="mr-2 size-4 text-purple-500" />
                 Manager
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleRoleChange("user")}
                 disabled={member.role === "user"}
               >
-                <IconUser className="size-4 mr-2 text-slate-500" />
+                <IconUser className="mr-2 size-4 text-slate-500" />
                 Member
               </DropdownMenuItem>
             </DropdownMenuSubContent>

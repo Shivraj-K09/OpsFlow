@@ -80,7 +80,7 @@ export function SidebarUserNav({
                         className="rounded-lg"
                       />
                     )}
-                    <AvatarFallback className="rounded-lg! bg-emerald-600 text-white text-[10px] font-semibold">
+                    <AvatarFallback className="rounded-lg! bg-emerald-600 text-[10px] font-semibold text-white">
                       {userInitials}
                     </AvatarFallback>
                   </Avatar>
@@ -92,7 +92,7 @@ export function SidebarUserNav({
                 </SidebarMenuButton>
               </PopoverTrigger>
               <PopoverContent
-                className="w-[--radix-popover-trigger-width] min-w-56 p-1.5 block rounded-lg"
+                className="block w-[--radix-popover-trigger-width] min-w-56 rounded-lg p-1.5"
                 side="top"
                 align="start"
                 sideOffset={8}

@@ -31,7 +31,7 @@ import {
   IconCircleDashed,
   IconCircleDot,
   IconCircle,
-  IconCircleCheck
+  IconCircleCheck,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -51,28 +51,40 @@ function getPriorityBadge(priority: string) {
   switch (priority.toLowerCase()) {
     case "urgent":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-red-500 bg-red-500/10 border-red-500/20 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1 border-red-500/20 bg-red-500/10 text-[11px] font-medium text-red-500"
+        >
           <IconAlertCircle className="size-3" />
           Urgent
         </Badge>
       );
     case "high":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-orange-500 bg-orange-500/10 border-orange-500/20 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1 border-orange-500/20 bg-orange-500/10 text-[11px] font-medium text-orange-500"
+        >
           <IconArrowUp className="size-3" />
           High
         </Badge>
       );
     case "medium":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-blue-500 bg-blue-500/10 border-blue-500/20 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1 border-blue-500/20 bg-blue-500/10 text-[11px] font-medium text-blue-500"
+        >
           <IconArrowRight className="size-3" />
           Medium
         </Badge>
       );
     case "low":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-muted-foreground bg-muted/50 border-border/50 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="text-muted-foreground bg-muted/50 border-border/50 flex w-fit items-center gap-1 text-[11px] font-medium"
+        >
           <IconArrowDown className="size-3" />
           Low
         </Badge>
@@ -86,28 +98,40 @@ function getStatusBadge(status: string) {
   switch (status.toLowerCase().replace(" ", "-")) {
     case "in-progress":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-blue-500 bg-blue-500/10 border-blue-500/20 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1 border-blue-500/20 bg-blue-500/10 text-[11px] font-medium text-blue-500"
+        >
           <IconCircleDot className="size-3" />
           In Progress
         </Badge>
       );
     case "review":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-purple-500 bg-purple-500/10 border-purple-500/20 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1 border-purple-500/20 bg-purple-500/10 text-[11px] font-medium text-purple-500"
+        >
           <IconCircle className="size-3" />
           Review
         </Badge>
       );
     case "open":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-muted-foreground bg-muted/50 border-border/50 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="text-muted-foreground bg-muted/50 border-border/50 flex w-fit items-center gap-1 text-[11px] font-medium"
+        >
           <IconCircleDashed className="size-3" />
           Open
         </Badge>
       );
     case "done":
       return (
-        <Badge variant="outline" className="font-medium text-[11px] text-emerald-500 bg-emerald-500/10 border-emerald-500/20 flex items-center gap-1 w-fit">
+        <Badge
+          variant="outline"
+          className="flex w-fit items-center gap-1 border-emerald-500/20 bg-emerald-500/10 text-[11px] font-medium text-emerald-500"
+        >
           <IconCircleCheck className="size-3" />
           Done
         </Badge>
@@ -137,15 +161,15 @@ export function TasksClient({
     if (!id) return "Unassigned";
     const member = members.find((m: Member) => m.id === id);
     return member ? member.full_name || member.email : "Unassigned";
-  }
+  };
 
   return (
-    <div className="flex flex-col p-6 h-full w-full">
-      <div className="flex-1 flex flex-col rounded-md border bg-background overflow-hidden">
-        <div className="p-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 flex-1">
+    <div className="flex h-full w-full flex-col p-6">
+      <div className="bg-background flex flex-1 flex-col overflow-hidden rounded-md border">
+        <div className="flex flex-col justify-between gap-4 border-b p-4 sm:flex-row sm:items-center">
+          <div className="flex flex-1 items-center gap-2">
             <Select defaultValue="all">
-              <SelectTrigger className="w-[150px] h-9">
+              <SelectTrigger className="h-9 w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -157,7 +181,7 @@ export function TasksClient({
             </Select>
 
             <div className="relative w-full sm:w-64">
-              <IconSearch className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4" />
+              <IconSearch className="absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
               <InputGroup className="h-9">
                 <InputGroupInput
                   placeholder="Search tasks..."
@@ -170,7 +194,7 @@ export function TasksClient({
           <div className="flex items-center gap-2">
             {userRole !== "USER" && (
               <Button className="h-9" onClick={() => setIsCreateOpen(true)}>
-                <IconPlus className="size-4 mr-2" />
+                <IconPlus className="mr-2 size-4" />
                 Create Task
               </Button>
             )}
@@ -181,22 +205,22 @@ export function TasksClient({
           <Table>
             <TableHeader className="bg-muted/50 sticky top-0 z-10">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="font-normal text-muted-foreground h-11 pl-6">
+                <TableHead className="text-muted-foreground h-11 pl-6 font-normal">
                   Title
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Status
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Priority
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Assignee
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Created At
                 </TableHead>
-                <TableHead className="w-[50px] font-normal text-muted-foreground h-11 pr-6"></TableHead>
+                <TableHead className="text-muted-foreground h-11 w-[50px] pr-6 font-normal"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -204,7 +228,7 @@ export function TasksClient({
                 <TableRow className="hover:bg-transparent">
                   <TableCell colSpan={6} className="h-72 align-middle">
                     <div className="flex w-full items-center justify-center">
-                      <Empty className="rounded-none border-0 bg-transparent flex flex-col items-center justify-center mx-auto">
+                      <Empty className="mx-auto flex flex-col items-center justify-center rounded-none border-0 bg-transparent">
                         <EmptyHeader>
                           <EmptyMedia variant="icon">
                             <IconFolder className="size-5" />
@@ -222,27 +246,29 @@ export function TasksClient({
                 tasks.map((task: Task) => (
                   <TableRow
                     key={task.id}
-                    className="cursor-pointer hover:bg-muted/50 transition-colors group"
+                    className="hover:bg-muted/50 group cursor-pointer transition-colors"
                     onClick={() => setSelectedTask(task)}
                   >
                     <TableCell className="pl-6">
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-medium text-sm text-foreground group-hover:text-primary transition-colors">
+                        <span className="text-foreground group-hover:text-primary text-sm font-medium transition-colors">
                           {task.title}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>{getStatusBadge(task.status)}</TableCell>
                     <TableCell>{getPriorityBadge(task.priority)}</TableCell>
-                    <TableCell className="text-sm">{getMemberName(task.assignee_id)}</TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
+                    <TableCell className="text-sm">
+                      {getMemberName(task.assignee_id)}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
                       {format(new Date(task.created_at), "MM/dd/yyyy")}
                     </TableCell>
                     <TableCell className="pr-6">
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="text-muted-foreground h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
                       >
                         <IconDotsVertical className="size-4" />
                       </Button>
@@ -253,17 +279,17 @@ export function TasksClient({
             </TableBody>
           </Table>
         </div>
-        <div className="p-4 border-t flex items-center justify-between bg-muted/10 sticky bottom-0 z-10">
-          <div className="text-xs text-muted-foreground">
+        <div className="bg-muted/10 sticky bottom-0 z-10 flex items-center justify-between border-t p-4">
+          <div className="text-muted-foreground text-xs">
             Showing 1-{tasks.length} of {tasks.length} tasks
           </div>
         </div>
       </div>
 
-      <CreateTaskDialog 
-        open={isCreateOpen} 
-        onOpenChange={setIsCreateOpen} 
-        members={members} 
+      <CreateTaskDialog
+        open={isCreateOpen}
+        onOpenChange={setIsCreateOpen}
+        members={members}
         workspaceId={workspaceId}
       />
       <TaskDetailsSheet

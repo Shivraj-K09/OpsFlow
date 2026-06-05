@@ -62,24 +62,24 @@ export function LoginForm() {
   };
 
   return (
-    <div className="flex w-full max-w-[360px] flex-col gap-8 animate-in fade-in zoom-in-95 duration-500">
+    <div className="animate-in fade-in zoom-in-95 flex w-full max-w-[360px] flex-col gap-8 duration-500">
       <div className="flex flex-col items-center gap-2 text-center">
-        <IconHexagonFilled className="size-10 text-primary" />
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+        <IconHexagonFilled className="text-primary size-10" />
+        <h1 className="text-foreground mt-2 text-2xl font-semibold tracking-tight">
           Welcome back
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Log in to your OpsFlow account
         </p>
       </div>
 
       {error && (
-        <div className="p-3 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-md text-center">
+        <div className="rounded-md border border-red-500/20 bg-red-500/10 p-3 text-center text-sm text-red-500">
           {error}
         </div>
       )}
 
-      <div className="flex flex-col w-full">
+      <div className="flex w-full flex-col">
         <AnimatePresence initial={false}>
           {!showEmailForm && (
             <motion.div
@@ -90,7 +90,7 @@ export function LoginForm() {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="w-full overflow-hidden"
             >
-              <div className="flex flex-col gap-4 w-full pb-1">
+              <div className="flex w-full flex-col gap-4 pb-1">
                 <Button
                   variant="default"
                   className="h-11 w-full"
@@ -131,7 +131,7 @@ export function LoginForm() {
             >
               <form
                 action={handleLogin}
-                className="flex flex-col gap-6 w-full pt-1"
+                className="flex w-full flex-col gap-6 pt-1"
               >
                 <FieldGroup>
                   <Field>
@@ -152,7 +152,7 @@ export function LoginForm() {
                       <FieldLabel htmlFor="password">Password</FieldLabel>
                       <Link
                         href="#"
-                        className="text-sm font-medium hover:underline text-muted-foreground transition-colors"
+                        className="text-muted-foreground text-sm font-medium transition-colors hover:underline"
                       >
                         Forgot password?
                       </Link>
@@ -170,7 +170,7 @@ export function LoginForm() {
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors"
                         disabled={isPending}
                       >
                         {showPassword ? (
@@ -211,11 +211,11 @@ export function LoginForm() {
         </AnimatePresence>
       </div>
 
-      <p className="mt-2 text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground mt-2 text-center text-sm">
         Don&apos;t have an account?{" "}
         <Link
           href={`/register?next=${encodeURIComponent(nextUrl)}`}
-          className="font-medium text-foreground hover:underline transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring rounded-sm"
+          className="text-foreground focus-visible:ring-ring rounded-sm font-medium transition-colors hover:underline focus-visible:ring-1 focus-visible:outline-none"
         >
           Sign up
         </Link>

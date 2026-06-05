@@ -78,17 +78,17 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
           return (
             <Card
               key={i}
-              className="shadow-sm border-border hover:border-primary/50 transition-colors"
+              className="border-border hover:border-primary/50 shadow-sm transition-colors"
             >
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">
                   {stat.title}
                 </CardTitle>
-                <Icon className="size-4 text-muted-foreground" />
+                <Icon className="text-muted-foreground size-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                <p className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
                   {stat.description}
                 </p>
               </CardContent>
@@ -98,24 +98,24 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-        <Card className="flex flex-col shadow-sm border-border p-0 gap-0">
-          <CardHeader className="py-2.5 px-4">
+        <Card className="border-border flex flex-col gap-0 p-0 shadow-sm">
+          <CardHeader className="px-4 py-2.5">
             <CardTitle className="text-lg font-semibold tracking-tight">
               Recent Tasks
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-0 flex flex-col flex-1 overflow-hidden border-t">
-            <ScrollArea className="h-[320px] w-full relative **:data-[slot=scroll-area-scrollbar]:hidden">
+          <CardContent className="flex flex-1 flex-col overflow-hidden border-t p-0">
+            <ScrollArea className="relative h-[320px] w-full **:data-[slot=scroll-area-scrollbar]:hidden">
               <table className="w-full caption-bottom text-sm">
                 <TableHeader>
-                  <TableRow className="hover:bg-transparent sticky top-0 z-20 bg-background/95 backdrop-blur-sm shadow-sm">
-                    <TableHead className="font-normal text-muted-foreground h-11 pl-6">
+                  <TableRow className="bg-background/95 sticky top-0 z-20 shadow-sm backdrop-blur-sm hover:bg-transparent">
+                    <TableHead className="text-muted-foreground h-11 pl-6 font-normal">
                       Task
                     </TableHead>
-                    <TableHead className="font-normal text-muted-foreground h-11">
+                    <TableHead className="text-muted-foreground h-11 font-normal">
                       Status
                     </TableHead>
-                    <TableHead className="font-normal text-muted-foreground h-11 text-right pr-6">
+                    <TableHead className="text-muted-foreground h-11 pr-6 text-right font-normal">
                       Priority
                     </TableHead>
                   </TableRow>
@@ -125,7 +125,7 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                     <TableRow className="hover:bg-transparent">
                       <TableCell
                         colSpan={3}
-                        className="h-24 text-center text-muted-foreground"
+                        className="text-muted-foreground h-24 text-center"
                       >
                         No tasks found in this workspace. Create one!
                       </TableCell>
@@ -134,7 +134,7 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                     recentTasks.map((task: Task) => (
                       <TableRow
                         key={task.id}
-                        className="hover:bg-transparent border-border/50"
+                        className="border-border/50 hover:bg-transparent"
                       >
                         <TableCell className="pl-6 font-medium">
                           {task.title}
@@ -144,12 +144,12 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                             variant={
                               task.status === "done" ? "outline" : "default"
                             }
-                            className="font-normal px-2 py-0 h-5"
+                            className="h-5 px-2 py-0 font-normal"
                           >
                             {task.status}
                           </Badge>
                         </TableCell>
-                        <TableCell className="text-right pr-6 text-muted-foreground capitalize">
+                        <TableCell className="text-muted-foreground pr-6 text-right capitalize">
                           {task.priority}
                         </TableCell>
                       </TableRow>
@@ -158,8 +158,8 @@ export function DashboardClient({ workspaceId }: DashboardClientProps) {
                 </TableBody>
               </table>
             </ScrollArea>
-            <div className="h-12 px-4 flex items-center justify-start bg-muted/10 sticky bottom-0 z-10 border-t">
-              <div className="text-xs text-muted-foreground">
+            <div className="bg-muted/10 sticky bottom-0 z-10 flex h-12 items-center justify-start border-t px-4">
+              <div className="text-muted-foreground text-xs">
                 Showing {Math.min(recentTasks.length, 8)} recent tasks
               </div>
             </div>

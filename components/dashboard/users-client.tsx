@@ -46,7 +46,11 @@ interface UsersClientProps {
   currentUserId: string;
 }
 
-export function UsersClient({ workspaceId, role, currentUserId }: UsersClientProps) {
+export function UsersClient({
+  workspaceId,
+  role,
+  currentUserId,
+}: UsersClientProps) {
   const { data: members = [] } = useWorkspaceMembers(workspaceId);
   const searchParams = useSearchParams();
   const q = searchParams.get("q") || "";
@@ -57,17 +61,17 @@ export function UsersClient({ workspaceId, role, currentUserId }: UsersClientPro
     filteredMembers = members.filter(
       (m: Member) =>
         m.full_name?.toLowerCase().includes(query) ||
-        m.email?.toLowerCase().includes(query)
+        m.email?.toLowerCase().includes(query),
     );
   }
 
   return (
-    <div className="flex flex-col p-6 h-full w-full">
-      <div className="flex-1 flex flex-col rounded-md border bg-background overflow-hidden">
-        <div className="p-4 border-b flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 flex-1">
+    <div className="flex h-full w-full flex-col p-6">
+      <div className="bg-background flex flex-1 flex-col overflow-hidden rounded-md border">
+        <div className="flex items-center justify-between gap-4 border-b p-4">
+          <div className="flex flex-1 items-center gap-2">
             <SearchInput placeholder="Search users by name or email..." />
-            <div className="text-sm text-muted-foreground font-medium hidden sm:block ml-2">
+            <div className="text-muted-foreground ml-2 hidden text-sm font-medium sm:block">
               {filteredMembers.length} total members
             </div>
           </div>
@@ -77,13 +81,13 @@ export function UsersClient({ workspaceId, role, currentUserId }: UsersClientPro
           <Table>
             <TableHeader className="bg-muted/50 sticky top-0 z-10">
               <TableRow className="hover:bg-transparent">
-                <TableHead className="font-normal text-muted-foreground h-11 pl-6">
+                <TableHead className="text-muted-foreground h-11 pl-6 font-normal">
                   User
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11">
+                <TableHead className="text-muted-foreground h-11 font-normal">
                   Role
                 </TableHead>
-                <TableHead className="font-normal text-muted-foreground h-11 hidden sm:table-cell">
+                <TableHead className="text-muted-foreground hidden h-11 font-normal sm:table-cell">
                   Joined Date
                 </TableHead>
               </TableRow>
@@ -106,11 +110,11 @@ export function UsersClient({ workspaceId, role, currentUserId }: UsersClientPro
             </TableBody>
           </Table>
         </div>
-        <div className="p-4 border-t flex items-center justify-between bg-muted/10 sticky bottom-0 z-10">
-          <div className="text-xs text-muted-foreground">
+        <div className="bg-muted/10 sticky bottom-0 z-10 flex items-center justify-between border-t p-4">
+          <div className="text-muted-foreground text-xs">
             Showing 1-{filteredMembers.length} of {filteredMembers.length} users
           </div>
-          <Pagination className="w-auto mx-0">
+          <Pagination className="mx-0 w-auto">
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious href="#" className="h-8 px-3 text-xs" />

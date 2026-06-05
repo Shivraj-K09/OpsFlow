@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+out
+dist
+build
+public
+*.md
+*.json

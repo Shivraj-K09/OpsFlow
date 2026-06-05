@@ -8,7 +8,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queries";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-import { DashboardClient } from "../../../components/dashboard/dashboard-client";
+import { DashboardClient } from "@/components/dashboard/dashboard-client";
 
 export const metadata: Metadata = {
   title: "Dashboard",

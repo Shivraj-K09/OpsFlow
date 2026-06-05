@@ -17,7 +17,10 @@ export async function GET() {
     .order("created_at", { ascending: true });
 
   if (error) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    );
   }
 
   return NextResponse.json({ data: workspaces });
@@ -30,10 +33,14 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const res = await createWorkspace(formData);
-    if (res?.error) return NextResponse.json({ error: res.error }, { status: 400 });
+    if (res?.error)
+      return NextResponse.json({ error: res.error }, { status: 400 });
     revalidatePath("/");
     return NextResponse.json(res);
   } catch (error: unknown) {
-    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    );
   }
 }
