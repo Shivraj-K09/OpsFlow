@@ -1,83 +1,51 @@
 # OpsFlow - Smart Operations System
 
-OpsFlow is a modern, highly scalable internal operations system built to handle multi-tenant task management, role-based access control, and immutable audit logging.
+OpsFlow is a production-ready, full-stack internal operations system built for modern teams. It provides secure task management, strict role-based access control (RBAC), and automated activity auditing.
 
-## Core Features
-1. **Multi-Tenant Workspaces**: Users can create isolated workspaces for different teams or projects.
-2. **Role-Based Access Control (RBAC)**: Enforced via PostgreSQL Row Level Security (RLS) and Next.js Server logic.
-   - **Admins:** Full control over workspace, tasks, and users.
-   - **Managers:** Can manage tasks and invite users.
-   - **Members:** Can only view tasks and update the status of tasks specifically assigned to them.
-3. **Task Management**: Create, assign, track, and update priorities/statuses of operational tasks.
-4. **Immutable Activity Logs**: Powered by native PostgreSQL Triggers. Every action (task created, status changed, user joined) is permanently audited.
-5. **Secure Invitations**: Generate secure invite links to safely onboard new members to specific workspaces.
+## 🚀 Features
+- **Multi-Tenant Workspaces**: Users can create, switch, and manage isolated workspaces.
+- **Role-Based Access Control**: `ADMIN`, `MANAGER`, and `USER` roles enforced at the database level via Postgres RLS.
+- **Task Management**: Create, assign, and track tasks with status workflows.
+- **Automated Audit Logs**: Database-level Postgres triggers automatically track who did what.
+- **Team Collaboration**: Task commenting and secure token-based workspace invitations.
+- **Performance Optimized**: Eliminates waterfalls using Next.js 15 Server Components, `React.cache()`, and parallel data fetching.
 
-## Tech Stack
-- **Framework:** Next.js 16.2 (App Router, React Query, standard REST Route Handlers)
-- **Database/Auth:** Supabase (PostgreSQL, GoTrue)
-- **Styling:** Tailwind CSS, Shadcn UI
-- **Icons:** Tabler Icons
+## 🛠️ Tech Stack
+- **Framework**: Next.js 15 (App Router, Server Components)
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Database & Auth**: Supabase (PostgreSQL, Row Level Security, Triggers)
+- **State Management**: TanStack React Query
 
----
+## 📦 Setup Instructions
 
-## Setup Instructions
-
-### 1. Clone the repository and install dependencies
+1. **Clone the repository**
 ```bash
-npm install
-# or
+git clone https://github.com/Shivraj-K09/OpsFlow.git
+cd OpsFlow
+```
+
+2. **Install dependencies**
+```bash
 pnpm install
 ```
 
-### 2. Environment Variables
-Create a `.env` file in the root of the project and add your Supabase credentials:
-
+3. **Configure Environment Variables**
+Create a `.env.local` file in the root directory and add your Supabase credentials:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE=your-supabase-service-role-key
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE=your_supabase_service_role_key
 ```
-*(Note: The `SUPABASE_SERVICE_ROLE` is required for fetching secure auth data, such as user emails in the Users directory).*
 
-### 3. Database Setup (Supabase)
-The system relies on specific tables, RLS policies, and triggers. You must execute the SQL schema to initialize the database.
+4. **Run Database Migrations**
+Run the SQL scripts located in your Supabase SQL editor to create the necessary tables, enums, triggers, and RLS policies.
 
-*Please refer to the `implementation_plan.md` or contact the developer for the exact SQL schema used to generate the `workspaces`, `workspace_members`, `tasks`, and `activity_logs` tables alongside their corresponding Postgres Triggers.*
-
-### 4. Run the Development Server
+5. **Start the Development Server**
 ```bash
-npm run dev
-# or
 pnpm dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
----
-
-## Project Structure Highlights
-- `app/(dashboard)`: Contains all secure, authenticated routes (Tasks, Users, Activity, Settings).
-- `app/(auth)`: Contains login and registration flows.
-- `app/invite/[id]`: The dynamic route for handling secure workspace invitations.
-- `lib/supabase`: Contains the Supabase clients (Browser, Server, and Admin implementations).
-- `components/ui`: Highly reusable Shadcn UI components.
-
-## API Documentation Note
-The web application is fully powered by **Clean and structured REST APIs** (`app/api/*`) and standard HTTP verbs, providing a decoupled backend architecture that can be consumed by external clients.
-
-**We intentionally DO NOT provide a Postman/Swagger JSON collection file**, because the API footprint is deliberately small, highly explicit, and documented right here.
-
-### Available REST Endpoints:
-
-#### `GET /api/workspaces`
-Fetches all workspaces the currently authenticated user belongs to.
-- **Auth:** Requires standard Supabase Auth cookies.
-
-#### `GET /api/tasks?workspaceId={id}`
-Fetches all tasks for a given workspace.
-- **Query Params:** `workspaceId` (Required)
-- **Auth:** Requires standard Supabase Auth cookies and enforces that the user is a member of the requested workspace.
-
-#### `POST /api/tasks`
-Creates a new task.
-- **Body:** `{ "title": "string", "workspaceId": "string", "description": "string?", "priority": "low|medium|high|urgent?", "assigneeId": "string?" }`
-- **Auth:** Validates authentication and ensures the user has access to the workspace.
+## 📄 Documentation
+- **Engineering Decisions**: Read `Engineering_Decision_Document.md` for architecture details, trade-offs, and scaling strategies.
+- **API Reference**: Import `OpsFlow_API_Collection.json` into Postman to test backend routes.

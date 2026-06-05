@@ -596,8 +596,7 @@ export async function acceptWorkspaceInvite(workspaceId: string) {
   const cookieStore = await cookies();
   cookieStore.set("active_workspace", workspaceId, { path: "/" });
   
-  revalidatePath("/", "layout");
-  redirect("/dashboard");
+  return { success: true };
 }
 
 export async function getTaskComments(taskId: string) {
