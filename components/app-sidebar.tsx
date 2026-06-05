@@ -43,6 +43,7 @@ export function AppSidebar({
       <SidebarWorkspaceSwitcher
         workspaces={workspaces}
         activeWorkspaceId={activeWorkspaceId}
+        userRole={userRole}
       />
 
       <SidebarContent className="gap-2">

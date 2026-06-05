@@ -48,9 +48,11 @@ import { Workspace } from "@/lib/types";
 export function SidebarWorkspaceSwitcher({
   workspaces = [],
   activeWorkspaceId,
+  userRole = "USER",
 }: {
   workspaces: Workspace[];
   activeWorkspaceId?: string;
+  userRole?: string;
 }) {
   const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
   const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
@@ -286,20 +288,22 @@ export function SidebarWorkspaceSwitcher({
                             <span className="flex-1 truncate">
                               {workspace.name}
                             </span>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="size-6 ml-auto hover:bg-muted"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setWorkspaceToEdit(workspace);
-                                setSelectedIconId(workspace.icon || "hexagon");
-                                setIsEditWorkspaceOpen(true);
-                                setIsWorkspaceOpen(false);
-                              }}
-                            >
-                              <IconSettings className="size-3.5 text-muted-foreground" />
-                            </Button>
+                            {userRole === "ADMIN" && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="size-6 ml-auto hover:bg-muted"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setWorkspaceToEdit(workspace);
+                                  setSelectedIconId(workspace.icon || "hexagon");
+                                  setIsEditWorkspaceOpen(true);
+                                  setIsWorkspaceOpen(false);
+                                }}
+                              >
+                                <IconSettings className="size-3.5 text-muted-foreground" />
+                              </Button>
+                            )}
                           </PopoverItem>
                         );
                       })}
