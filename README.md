@@ -1,51 +1,47 @@
 # OpsFlow - Smart Operations System
 
-OpsFlow is a production-ready, full-stack internal operations system built for modern teams. It provides secure task management, strict role-based access control (RBAC), and automated activity auditing.
+OpsFlow is a simple, powerful, and secure system that helps teams manage their daily work. It allows companies to create workspaces, invite team members, assign tasks, and track exactly who did what.
 
 ## 🚀 Features
-- **Multi-Tenant Workspaces**: Users can create, switch, and manage isolated workspaces.
-- **Role-Based Access Control**: `ADMIN`, `MANAGER`, and `USER` roles enforced at the database level via Postgres RLS.
-- **Task Management**: Create, assign, and track tasks with status workflows.
-- **Automated Audit Logs**: Database-level Postgres triggers automatically track who did what.
-- **Team Collaboration**: Task commenting and secure token-based workspace invitations.
-- **Performance Optimized**: Eliminates waterfalls using Next.js 15 Server Components, `React.cache()`, and parallel data fetching.
+- **Workspaces**: You can create different workspaces for different teams and switch between them easily.
+- **Roles & Permissions**: Three clear roles (`ADMIN`, `MANAGER`, and `USER`). The database strictly enforces what each person is allowed to do.
+- **Task Management**: Create tasks, assign them to team members, and move them from "Open" to "Done".
+- **Automatic Audit Logs**: The database automatically tracks every action (like who updated a task and when) so nothing is missed.
+- **Team Collaboration**: Users can leave comments on tasks to discuss the work.
+- **Lightning Fast**: Built with Next.js 15, the app is optimized to load data in parallel so you never have to wait.
 
-## 🛠️ Tech Stack
-- **Framework**: Next.js 15 (App Router, Server Components)
-- **Styling**: Tailwind CSS + shadcn/ui
-- **Database & Auth**: Supabase (PostgreSQL, Row Level Security, Triggers)
-- **State Management**: TanStack React Query
+## 🛠️ Tech Stack (What it's built with)
+- **Frontend**: Next.js 15, React, Tailwind CSS (for styling)
+- **Backend**: Next.js API Routes
+- **Database & Security**: Supabase (PostgreSQL database with strict Row Level Security)
 
-## 📦 Setup Instructions
+## 📦 How to Run This Project
 
-1. **Clone the repository**
+1. **Download the code**
 ```bash
 git clone https://github.com/Shivraj-K09/OpsFlow.git
 cd OpsFlow
 ```
 
-2. **Install dependencies**
+2. **Install the required packages**
 ```bash
 pnpm install
 ```
 
-3. **Configure Environment Variables**
-Create a `.env.local` file in the root directory and add your Supabase credentials:
+3. **Set up the Database Keys**
+Create a new file named `.env.local` in the main folder and add your Supabase connection details:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE=your_supabase_service_role_key
 ```
 
-4. **Run Database Migrations**
-Run the SQL scripts located in your Supabase SQL editor to create the necessary tables, enums, triggers, and RLS policies.
-
-5. **Start the Development Server**
+4. **Start the Website**
 ```bash
 pnpm dev
 ```
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to use the app!
 
-## 📄 Documentation
-- **Engineering Decisions**: Read `Engineering_Decision_Document.md` for architecture details, trade-offs, and scaling strategies.
-- **API Reference**: Import `OpsFlow_API_Collection.json` into Postman to test backend routes.
+## 📄 Important Documents for Evaluation
+- **Engineering Decisions**: Please read the `Engineering_Decision_Document.md` file. It explains how I built the app, the problems I solved, and how it handles thousands of users.
+- **Test the API**: I have included an `API_Documentation.md` file that explains all the backend API routes and what they do in simple, easy-to-understand terms.
