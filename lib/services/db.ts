@@ -199,33 +199,34 @@ export async function getDashboardMetrics(workspaceId: string) {
     };
   }
 
-  // 1. Fetch total members in workspace
-  const { count: memberCount } = await supabase
-    .from("workspace_members")
-    .select("*", { count: "exact", head: true })
-    .eq("workspace_id", workspaceId);
-
-  // 2. Fetch active tasks in workspace (not done)
-  const { count: activeTaskCount } = await supabase
-    .from("tasks")
-    .select("*", { count: "exact", head: true })
-    .eq("workspace_id", workspaceId)
-    .neq("status", "done");
-
-  // 3. Fetch recent tasks
-  const { data: recentTasks } = await supabase
-    .from("tasks")
-    .select("*")
-    .eq("workspace_id", workspaceId)
-    .order("created_at", { ascending: false })
-    .limit(8);
-
-  // 4. Fetch all done tasks to build the chart data
-  const { data: doneTasks } = await supabase
-    .from("tasks")
-    .select("created_at")
-    .eq("workspace_id", workspaceId)
-    .eq("status", "done");
+  // Execute all 4 queries in parallel to avoid a massive 4-step waterfall
+  const [
+    { count: memberCount },
+    { count: activeTaskCount },
+    { data: recentTasks },
+    { data: doneTasks }
+  ] = await Promise.all([
+    supabase
+      .from("workspace_members")
+      .select("*", { count: "exact", head: true })
+      .eq("workspace_id", workspaceId),
+    supabase
+      .from("tasks")
+      .select("*", { count: "exact", head: true })
+      .eq("workspace_id", workspaceId)
+      .neq("status", "done"),
+    supabase
+      .from("tasks")
+      .select("*")
+      .eq("workspace_id", workspaceId)
+      .order("created_at", { ascending: false })
+      .limit(8),
+    supabase
+      .from("tasks")
+      .select("created_at")
+      .eq("workspace_id", workspaceId)
+      .eq("status", "done")
+  ]);
 
   const tasksList = doneTasks || [];
   const chartData = [];
