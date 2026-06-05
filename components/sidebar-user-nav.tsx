@@ -45,7 +45,7 @@ export function SidebarUserNav({
   const [mounted, setMounted] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [currentOrigin, setCurrentOrigin] = useState("https://opsflow.com");
+  const [currentOrigin, setCurrentOrigin] = useState("");
 
   const fullName = user?.user_metadata?.full_name || "User";
   const userInitials = fullName.substring(0, 2).toUpperCase();
