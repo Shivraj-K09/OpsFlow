@@ -227,12 +227,15 @@ export function TasksClient({
           </div>
 
           <div className="flex items-center gap-2">
-            {userRole !== "USER" && (
-              <Button className="h-9" onClick={() => setIsCreateOpen(true)}>
-                <IconPlus className="mr-2 size-4" />
-                Create Task
-              </Button>
-            )}
+            <Button
+              className="h-9"
+              onClick={() => setIsCreateOpen(true)}
+              disabled={userRole !== "ADMIN"}
+              title={userRole !== "ADMIN" ? "Only administrators can create tasks" : ""}
+            >
+              <IconPlus className="mr-2 size-4" />
+              Create Task
+            </Button>
           </div>
         </div>
 

@@ -39,9 +39,10 @@ export const getCurrentWorkspaceRole = cache(
       .eq("user_id", userData.user.id)
       .single();
 
-    if (member) {
-      if (member.role === "admin") return "ADMIN";
-      if (member.role === "manager") return "MANAGER";
+    if (member && member.role) {
+      const dbRole = member.role.toLowerCase();
+      if (dbRole === "admin" || dbRole === "owner") return "ADMIN";
+      if (dbRole === "manager") return "MANAGER";
       return "USER";
     }
     return null;
@@ -473,6 +474,11 @@ export async function createTask(formData: FormData, workspaceId: string) {
 
   if (!member) {
     return { error: "Unauthorized: You do not have access to this workspace." };
+  }
+
+  const dbRole = member.role?.toLowerCase();
+  if (dbRole !== "admin" && dbRole !== "owner") {
+    return { error: "Unauthorized: Only administrators can create tasks." };
   }
 
   const { error } = await supabase.from("tasks").insert({
