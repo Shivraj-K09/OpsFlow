@@ -159,7 +159,7 @@ export function WorkloadClient({ workspaceId }: WorkloadClientProps) {
                           {member.avatar_url && (
                             <AvatarImage
                               src={member.avatar_url}
-                              alt={member.full_name || member.email || ""}
+                              alt={member.name || member.full_name || member.email || ""}
                               referrerPolicy="no-referrer"
                             />
                           )}
@@ -170,7 +170,7 @@ export function WorkloadClient({ workspaceId }: WorkloadClientProps) {
                           </AvatarFallback>
                         </Avatar>
                         <span className="text-foreground text-sm font-medium">
-                          {member.full_name || member.email}
+                          {member.name || member.full_name || member.email}
                         </span>
                       </div>
                     </TableCell>
