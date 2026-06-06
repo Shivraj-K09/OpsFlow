@@ -25,6 +25,7 @@ import { Member } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type TeamMember = Member & {
+  name?: string;
   tasks: number;
   capacity: number;
   trend: string;
